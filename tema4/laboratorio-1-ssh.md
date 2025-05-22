@@ -5,7 +5,7 @@
 **Equipamiento Necesario:**
 
 * Una máquina virtual o física con Ubuntu Server 24.04 LTS instalado.
-* Otra máquina (con cualquier sistema operativo que tenga un cliente SSH instalado, como Linux, macOS o Windows con PuTTY).
+* Otra máquina (con cualquier sistema operativo que tenga un cliente SSH instalado, como Linux, macOS o Windows con PowerShell/GitBash/PuTTY).
 * Conectividad de red entre ambas máquinas.
 
 **Pasos:**
@@ -102,7 +102,7 @@ sudo ufw status
 
 **5. Conexión al Servidor SSH desde un Cliente:**
 
-Desde tu máquina host o anfitrión, utiliza un cliente SSH (PowerShell, GitBash o Putty) para conectarte al Ubuntu Server.
+Desde tu máquina Host o anfitrión, utiliza un cliente SSH (PowerShell, GitBash o Putty) para conectarte al Ubuntu Server.
 
 * **En Linux o macOS:** Abre la terminal y usa el comando:
 
@@ -125,21 +125,108 @@ Desde tu máquina host o anfitrión, utiliza un cliente SSH (PowerShell, GitBash
 
     Se te pedirá la contraseña del usuario (si la autenticación por contraseña está habilitada) o se utilizará la clave privada si configuraste la autenticación por clave pública.
 
-**Ejercicio Práctico:**
+**6. Configuración de la Autenticación por Clave Pública:**
+
+   La autenticación por clave pública es una forma más segura de acceder a tu servidor SSH que el uso de contraseñas. Implica la creación de un par de claves: una clave privada (que se guarda en tu máquina cliente) y una clave pública (que se copia al servidor).
+
+   * **Generar el par de claves en tu máquina cliente:**
+
+     Abre tu terminal (en Linux o macOS) o PuTTYgen (en Windows) y ejecuta el siguiente comando:
+
+     ```bash
+     ssh-keygen -t rsa -b 4096
+     ```
+
+     Se te pedirá que elijas una ubicación para guardar la clave (la predeterminada suele ser `~/.ssh/id_rsa` para la clave privada y `~/.ssh/id_rsa.pub` para la clave pública) y que ingreses una frase de contraseña (opcional, pero recomendada para mayor seguridad).
+
+   * **Copiar la clave pública al servidor Ubuntu:**
+
+     Hay varias formas de copiar la clave pública al servidor. Una de las más sencillas (si aún tienes acceso por contraseña) es usar `ssh-copy-id`:
+
+     ```bash
+     ssh-copy-id usuario@<ip_del_servidor_ubuntu>
+     ```
+
+     Se te pedirá tu contraseña en el servidor Ubuntu. Este comando copiará el contenido de tu archivo `~/.ssh/id_rsa.pub` (o la ubicación donde guardaste tu clave pública) al archivo `~/.ssh/authorized_keys` en el directorio home del `usuario` en el servidor.
+
+     Si `ssh-copy-id` no está disponible, puedes copiar manualmente el contenido de tu archivo de clave pública (`~/.ssh/id_rsa.pub`) y añadirlo al archivo `~/.ssh/authorized_keys` en el servidor. Primero, conéctate al servidor por SSH (con contraseña) y luego ejecuta:
+
+     ```bash
+     mkdir -p ~/.ssh
+     chmod 700 ~/.ssh
+     nano ~/.ssh/authorized_keys
+     ```
+
+     Pega el contenido de tu clave pública en este archivo. Guarda y cierra el archivo. Luego, asegúrate de que los permisos del archivo `authorized_keys` sean correctos:
+
+     ```bash
+     chmod 600 ~/.ssh/authorized_keys
+     ```
+
+   * **Deshabilitar la autenticación por contraseña (opcional, pero recomendado para mayor seguridad):**
+
+     Edita el archivo `/etc/ssh/sshd_config` en el servidor (como se explicó en el Paso 3) y cambia la directiva `PasswordAuthentication` a `no`:
+
+     ```
+     PasswordAuthentication no
+     ```
+
+     Guarda el archivo y reinicia el servicio SSH:
+
+     ```bash
+     sudo systemctl restart ssh
+     ```
+
+   Después de completar estos pasos, deberías poder conectarte a tu servidor Ubuntu por SSH desde tu máquina cliente sin necesidad de ingresar una contraseña (siempre y cuando la clave privada correspondiente esté presente en tu cliente y, si configuraste una frase de contraseña para la clave privada, la ingreses cuando sea necesario).
+
+**7. Utilización de SCP (Secure Copy):**
+
+   SCP es una utilidad de línea de comandos que permite la transferencia segura de archivos entre sistemas a través de una conexión SSH. Puedes usar SCP para copiar archivos desde tu máquina cliente al servidor Ubuntu o viceversa.
+
+   * **Copiar un archivo desde tu máquina cliente al servidor Ubuntu:**
+
+     ```bash
+     scp /ruta/del/archivo_local usuario@<ip_del_servidor_ubuntu>:/ruta/de/destino_remoto
+     ```
+
+     Reemplaza `/ruta/del/archivo_local` con la ruta del archivo que quieres copiar en tu máquina cliente, `usuario` con tu nombre de usuario en el servidor Ubuntu, `<ip_del_servidor_ubuntu>` con la dirección IP del servidor, y `/ruta/de/destino_remoto` con la ubicación donde quieres guardar el archivo en el servidor. Si estás utilizando un puerto SSH no estándar, debes especificarlo con la opción `-P` (en mayúscula):
+
+     ```bash
+     scp -P <nuevo_puerto> /ruta/del/archivo_local usuario@<ip_del_servidor_ubuntu>:/ruta/de/destino_remoto
+     ```
+
+   * **Copiar un archivo desde el servidor Ubuntu a tu máquina cliente:**
+
+     ```bash
+     scp usuario@<ip_del_servidor_ubuntu>:/ruta/del/archivo_remoto /ruta/de/destino_local
+     ```
+
+     Reemplaza `/ruta/del/archivo_remoto` con la ruta del archivo que quieres copiar del servidor, `usuario` y `<ip_del_servidor_ubuntu>` con la información de conexión al servidor, y `/ruta/de/destino_local` con la ubicación donde quieres guardar el archivo en tu máquina cliente. Si estás utilizando un puerto SSH no estándar:
+
+     ```bash
+     scp -P <nuevo_puerto> usuario@<ip_del_servidor_ubuntu>:/ruta/del/archivo_remoto /ruta/de/destino_local
+     ```
+
+   SCP utiliza la misma autenticación que SSH. Si configuraste la autenticación por clave pública, no se te pedirá una contraseña al usar SCP. Si la autenticación por contraseña está habilitada, se te solicitará la contraseña del usuario.
+
+**Práctica individual:**
 
 1.  **Seguridad Primero:**
     * Edita el archivo `/etc/ssh/sshd_config`.
-    * Cambia la directiva `PermitRootLogin` a `no`.
-    * Deshabilita la autenticación por contraseña (`PasswordAuthentication no`).
-    * Guarda los cambios y reinicia el servicio SSH (`sudo systemctl restart ssh`).
+    * Cambia la configuración para no permitir acceso remoto al superadministrador.
+    * Deshabilita la autenticación por contraseña.
+    * Guarda los cambios y reinicia el servicio SSH.
     * **Importante:** Antes de cerrar la sesión actual, asegúrate de tener configurada la autenticación por clave pública para un usuario no root con permisos `sudo`, de lo contrario, podrías perder el acceso al servidor.
 
 2.  **Cambio de Puerto:**
     * Elige un puerto no estándar (por ejemplo, un número entre 1025 y 65535).
-    * Edita `/etc/ssh/sshd_config` y cambia la directiva `Port` al puerto elegido.
-    * Actualiza la configuración del firewall UFW para permitir el tráfico en el nuevo puerto (`sudo ufw allow <nuevo_puerto>/tcp`, y si permitiste `ssh` anteriormente, puedes eliminar esa regla con `sudo ufw delete allow ssh`).
-    * Reinicia el servicio SSH (`sudo systemctl restart ssh`).
-    * Intenta conectarte al servidor SSH desde tu cliente utilizando el nuevo puerto (recuerda usar la opción `-p` en el comando `ssh` o especificar el puerto en PuTTY).
+    * Edita el archivo de configuración de SSH y cambia al puerto elegido.
+    * Actualiza la configuración del firewall UFW para permitir el tráfico en el nuevo puerto (y si permitiste `ssh` anteriormente, puedes eliminar esa regla del UFW).
+    * Reinicia el servicio SSH .
+3.  **Acceso remoto**
+    * Intenta conectarte al servidor SSH desde tu cliente utilizando el nuevo puerto.
+    * Copia una carpeta de tu máquina Host hacia tu Ubuntu Server.
+    * Copia un archivo de tu Ubuntu Server hacia tu máquina Host.
 
 3.  **Investigación Adicional:**
     * Investiga y explica brevemente la función de las siguientes directivas en el archivo `/etc/ssh/sshd_config`:
