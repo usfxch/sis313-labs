@@ -101,6 +101,7 @@ Mejoras a la seguridad y el rendimiento de tu servidor Apache.
     * **¿Por qué?:** Habilitar solo los módulos que tu aplicación necesita reduce la superficie de ataque y el consumo de recursos.
     * **¿Cómo?:**
         * Lista los módulos habilitados:
+
           ```bash
           apachectl -M
           ```

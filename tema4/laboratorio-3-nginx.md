@@ -12,15 +12,49 @@
 
 **1. Instalación de Nginx:**
 
-   Ejecuta el comando para instalar el servidor web Nginx: `sudo apt update && sudo apt install nginx`.
+   Ejecuta el comando para instalar el servidor web Nginx:
+
+   ```bash
+   sudo apt update && sudo apt install nginx
+   ```
 
 **2. Verificación del Estado del Servicio Nginx:**
 
-   Verifica que el servicio Nginx esté en ejecución usando el comando: `sudo systemctl status nginx`. Asegúrate de que el estado sea `active (running)`. Si no lo está, puedes iniciarlo con `sudo systemctl start nginx` y habilitarlo para el inicio automático con `sudo systemctl enable nginx`.
+   Verifica que el servicio Nginx esté en ejecución usando el comando:
+   
+   ```bash
+   sudo systemctl status nginx
+   ```
+
+   Asegúrate de que el estado sea `active (running)`. Si no lo está, puedes iniciarlo con:
+
+   ```bash
+   sudo systemctl start nginx
+   ```
+   
+   Y habilitarlo para el inicio automático con:
+   ```bash
+   sudo systemctl enable nginx
+   ```
 
 **3. Configuración Básica del Firewall (UFW):**
 
-   Si UFW está habilitado, permite el tráfico HTTP (puerto 80) y HTTPS (puerto 443) para Nginx con los comandos: `sudo ufw allow 'Nginx HTTP'` y `sudo ufw allow 'Nginx HTTPS'` (o `sudo ufw allow 'Nginx Full'`). Verifica el estado del firewall con `sudo ufw status`.
+   Si UFW está habilitado, permite el tráfico HTTP (puerto 80) y HTTPS (puerto 443) para Nginx con los comandos:
+   ```bash
+   sudo ufw allow 'Nginx HTTP'
+   ```
+   Y para habilitar HTTPS:
+   ```bash
+   sudo ufw allow 'Nginx HTTPS'
+   ```
+   O para habilitar ambos (HTTP y HTTPS) utiliza:
+   ```bash
+   sudo ufw allow 'Nginx Full'
+   ```
+   Verifica el estado del firewall con:
+   ```bash
+   sudo ufw status
+   ```
 
 **4. Acceso a la Página Web Predeterminada de Nginx:**
 
@@ -98,9 +132,20 @@ Este paso se centra en mejorar la seguridad y el rendimiento de tu servidor Ngin
 
 **7. Configuración de Nginx como Proxy Inverso con PHP-FPM:**
 
-   * **Instalar PHP-FPM y los módulos PHP necesarios:** Utiliza el comando `sudo apt install php<tu_version_de_php>-fpm php<tu_version_de_php>-<extension> ...` reemplazando las variables con tu versión de PHP y las extensiones requeridas.
+   * **Instalar PHP-FPM y los módulos PHP necesarios:** Utiliza el comando:
+        ```bash
+        sudo apt install php<tu_version_de_php>-fpm php<tu_version_de_php>-<extension>
+        ```
+        > Reemplazando las variables con tu versión de PHP y las extensiones requeridas.
    * **Configurar Nginx para pasar las peticiones PHP a PHP-FPM:** Edita el archivo de configuración de tu Server Block y dentro del bloque `location ~ \.php$`, incluye la configuración de `fastcgi_pass` apuntando al socket de PHP-FPM (ejemplo: `fastcgi_pass unix:/run/php/php<tu_version_de_php>-fpm.sock;`) y la inclusión de `snippets/fastcgi-php.conf`.
-   * **Reiniciar PHP-FPM y Nginx:** Aplica los cambios con `sudo systemctl restart php<tu_version_de_php>-fpm` y `sudo systemctl restart nginx`.
+   * **Reiniciar PHP-FPM y Nginx:** Aplica los cambios con:
+     ```bash
+     sudo systemctl restart php<tu_version_de_php>-fpm
+     ```
+     Y para reiniciar:
+     ```bash
+     sudo systemctl restart nginx
+     ```
    * **Probar la configuración de PHP:** Crea un archivo `info.php` en tu `root` (`/var/www/html/`) con `<?php phpinfo(); ?>` y accédelo desde tu navegador. **Elimina este archivo después de la prueba.**
 
 **8. Configuración de Server Blocks en Nginx:**
