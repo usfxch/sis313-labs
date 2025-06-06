@@ -125,7 +125,7 @@ Mejoras a la seguridad y el rendimiento de tu servidor Apache.
         * **¿Cómo?:** Edita `/etc/apache2/apache2.conf` y cambia la línea `ServerTokens OS` o `ServerTokens Full` a `ServerTokens Prod`.
     * **`ServerSignature Off`:**
         * **¿Por qué?:** Evita que Apache muestre información del servidor (versión, sistema operativo) en las páginas de error generadas por el servidor.
-        * **¿Cómo?:** Edita `/etc/apache2/apache2.conf` y cambia la línea `ServerSignature On` a `ServerSignature Off`.
+        * **¿Cómo?:** Edita `/etc/apache2/conf-enabled/security.conf` y cambia la línea `ServerSignature On` a `ServerSignature Off`.
     * **`Timeout`:**
         * **¿Por qué?:** Controla el tiempo que el servidor espera entre la recepción de paquetes para una solicitud. Un valor demasiado alto puede mantener conexiones inactivas abiertas y consumir recursos.
         * **¿Cómo?:** Edita `/etc/apache2/apache2.conf` y ajusta el valor en segundos (por ejemplo, `Timeout 300`).
@@ -155,9 +155,12 @@ Mejoras a la seguridad y el rendimiento de tu servidor Apache.
 
    * **Instalar `libapache2-mod-php` y los módulos PHP necesarios:** Utiliza el comando:
       ```bash
-      sudo apt install libapache2-mod-php<tu_version_de_php> php<tu_version_de_php>-<extension> ...
+      sudo apt install libapache2-mod-php<tu_version_de_php> php<tu_version_de_php> php<tu_version_de_php>-<extension> ...
       ```
-      > Reemplaza las variables con tu versión de PHP y las extensiones requeridas.
+      > Reemplaza las variables con tu versión de PHP y las extensiones requeridas. Por ejemplo:
+       ```bash
+      sudo apt install libapache2-mod-php8.3 php8.3 php8.3-mysql
+      ```
    * **Habilitar el módulo PHP (si no se habilitó automáticamente):** Usa el comando:
       ```bash
       sudo a2enmod php<tu_version_de_php>
