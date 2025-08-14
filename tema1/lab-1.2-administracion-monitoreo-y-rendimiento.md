@@ -28,7 +28,7 @@
 ## 💻 Sección 2: Repaso de Comandos Fundamentales
 
 Puedes consultar también el documento
-[Ubuntu CLI cheat sheet](tema1/ubuntu-server-cli-cheat-sheet-02.07.2024-update.pdf), donde tienes un resumen muy completo del uso de comandos para la terminal.
+[Ubuntu CLI cheat sheet](ubuntu-server-cli-cheat-sheet-02.07.2024-update.pdf), donde tienes un resumen muy completo del uso de comandos para la terminal.
 
 ### 2.1 Comandos de Administración del Sistema y Paquetes
 
