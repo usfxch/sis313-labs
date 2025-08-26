@@ -156,7 +156,7 @@ La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor pa
     4. **Crea varios archivos importantes** en el directorio montado
     (`/mnt/raid5` o `/mnt/raid10`) y **copia archivos gran tamaño** (superiores a 100 MB) desde tu host anfitrión a tu máquina virtual utilizando `scp`.
     5. **Simula la falla de uno de los discos virtuales** del arreglo RAID 5 (RAID 10 para G2) y reemplaza con un nuevo disco.
-    6. **Verifica que los archivos creados en el paso 4 sigan accesibles** desde el punto de montaje `/mnt/raid5` (`/mnt/raid10` para G2). Intenta leer su contenido.
+    6. **Verifica que los archivos creados en el paso iv sigan accesibles** desde el punto de montaje `/mnt/raid5` (`/mnt/raid10` para G2). Intenta leer su contenido.
     7. **Verifica el estado del arreglo RAID** y describe el estado.
 
 
