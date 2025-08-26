@@ -19,7 +19,8 @@
     - Acceso a la línea de comandos o terminal (instalar [Warp desde aquí](https://app.warp.dev/referral/3DY6RJ)). 
     - Adaptador de red conectado como **Adaptador puente**.
     - Al menos **dos discos virtuales** para **RAID 1**.
-    - Al menos **tres discos virtuales** para **RAID 5**.quiz
+    - Al menos **tres discos virtuales** para **RAID 5**.
+    - Al menos **cuatro discos virtuales** para **RAID 10**.
     - Asegúrate de que los discos adicionales tengan un tamaño similar.
 
 ## 💻 Sección 2: Práctica guiada
@@ -41,19 +42,25 @@
     - **Paso 3:** Escribe algunos archivos de prueba en `/mnt/raid`.
 
         ```bash
-        sudo chown <usuario>:<grupo> /mnt/raid1 echo "Hola Mundo" > /mnt/raid1/archivo_de_prueba.txt
         # Reemplaza con el nombre de usuario y grupo de tu SO
+        sudo chown <usuario>:<grupo> /mnt/raid1 echo "Hola Mundo" > /mnt/raid1/archivo_de_prueba.txt
         ```
 
 2. **Configurar el RAID para que inicie desde el arranque**
-    - Añadir al archivo `/etc/fstab` el montaje del disco RAID:
+    - Añadir al archivo `/etc/fstab` el montaje del disco RAID (utiliza el editor `nano`):
         ```bash
         UUID=<UUID del RAID>  /mnt/raid1  ext4  defaults,nofail  0  2
         ```
     - Revisa los archivos de configuración del Sistema y de las unidades de disco y reinicia la VM:
         ```bash
         sudo systemctl daemon-reload
+        ```
+
+        ```bash
         sudo mount -a
+        ```
+
+        ```bash
         sudo reboot
         ```
 
@@ -63,6 +70,9 @@
 
         ```bash
         sudo mdadm --manage /dev/md1 --fail /dev/sdb
+        ```
+
+        ```bash
         sudo mdadm --manage /dev/md1 --remove /dev/sdb
         ```
 
@@ -74,9 +84,14 @@
 
         ```bash
         cd /mnt/raid
+        ```
+
+        ```bash
         ls -l
+        ```
+
+        ```bash
         cat archivo_de_prueba.txt 
-        # Reemplaza con el nombre de tu archivo
         ```
         > ¿Los datos siguen accesibles?
 
@@ -120,7 +135,7 @@
 
 ### 📋 Escenario del Laboratorio
 
-La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor para una base de datos crítica. Para garantizar la alta disponibilidad y el rendimiento, la directiva ha especificado que el servidor debe tener un sistema de almacenamiento configurado con un arreglo RAID 5 (RAID 10 para el Grupo 2). Deberás utilizar un entorno virtualizado para demostrar que el diseño cumple con los requisitos.
+La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor para una base de datos crítica. Para garantizar la alta disponibilidad y el rendimiento, la directiva ha especificado que el servidor debe tener un sistema de almacenamiento configurado con un arreglo RAID 5 (RAID 10 para el Grupo 2 de Laboratorio). Deberás utilizar un entorno virtualizado para demostrar que el diseño cumple con los requisitos.
 
 ### ⚙️ Tareas a Realizar
 
