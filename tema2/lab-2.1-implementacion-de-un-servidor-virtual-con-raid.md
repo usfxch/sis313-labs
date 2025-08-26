@@ -116,11 +116,11 @@
 
 **La redundancia es crucial para la tolerancia a fallos en sistemas de almacenamiento críticos.**
 
-## ⚙️ Sección 3: Ejercicio Práctico de implementación de un servidor virtual con RAID 5
+## ⚙️ Sección 3: Ejercicio Práctico de implementación de un servidor virtual con RAID 5 y RAID 10
 
 ### 📋 Escenario del Laboratorio
 
-La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor para una base de datos crítica. Para garantizar la alta disponibilidad y el rendimiento, la directiva ha especificado que el servidor debe tener un sistema de almacenamiento configurado con un arreglo RAID 5. Deberás utilizar un entorno virtualizado para demostrar que el diseño cumple con los requisitos.
+La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor para una base de datos crítica. Para garantizar la alta disponibilidad y el rendimiento, la directiva ha especificado que el servidor debe tener un sistema de almacenamiento configurado con un arreglo RAID 5 (RAID 10 para el Grupo 2). Deberás utilizar un entorno virtualizado para demostrar que el diseño cumple con los requisitos.
 
 ### ⚙️ Tareas a Realizar
 
@@ -128,21 +128,21 @@ La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor pa
 
     - Crea una nueva máquina virtual en VirtualBox, asignándole un mínimo de 2 GB de RAM, 2 CPU y un disco de 10 GB.
 
-    - Adiciona 3 o más discos duros virtuales a la máquina, cada uno de 2 GB de tamaño. Asegúrate de que todos los discos no hayan sido utilizados antes.
+    - Adiciona 3 o más discos (4 para G2) duros virtuales a la máquina, cada uno de 2 GB de tamaño. Asegúrate de que todos los discos no hayan sido utilizados antes.
 
     - Instala Ubuntu Server 24.04 LTS en el primer disco (el que se usará para el sistema operativo). La instalación en un disco separado facilitará la práctica.
 
 2. **Práctica Individual:**
 
     Realiza los siguientes pasos de forma individual:
-    1. **Crea un arreglo RAID 5** utilizando `mdadm` con los discos virtuales necesarios en tu máquina virtual, establece el nivel correcto y asigna el nombre de dispositivo `/dev/md5` al arreglo.
-    2. **Crea un sistema de archivos** (`ext4`) en el dispositivo RAID virtual `/dev/md5`.
-    3. **Crea un punto de montaje** (ej: `/mnt/raid5`) y monta el sistema de archivos RAID en este punto.
+    1. **Crea un arreglo RAID 5 (RAID 10 para G2)** utilizando `mdadm` con los discos virtuales necesarios en tu máquina virtual, establece el nivel correcto y asigna el nombre de dispositivo `/dev/md5` (`/dev/md10` para G2) al arreglo.
+    2. **Crea un sistema de archivos** (`ext4`) en el dispositivo RAID virtual `/dev/md5` (`/dev/md10` para G2).
+    3. **Crea un punto de montaje** (ej: `/mnt/raid5` para G2 y `/mnt/raid10` para G2) y monta el sistema de archivos RAID en este punto.
     4. **Crea varios archivos importantes** en el directorio montado
-    (`/mnt/raid5`) y **copia archivos gran tamaño** (superiores a 100 MB) desde tu host anfitrión a tu máquina virtual utilizando `scp`.
-    5. **Simula la falla de uno de los discos virtuales** del arreglo RAID 5 y reemplaza con un nuevo disco.
-    6. **Verifica que los archivos creados en el paso 4 sigan accesibles** desde el punto de montaje `/mnt/raid5`. Intenta leer su contenido.
-    7. **Verifica el estado del arreglo RAID 5** y describe el estado.
+    (`/mnt/raid5` o `/mnt/raid10`) y **copia archivos gran tamaño** (superiores a 100 MB) desde tu host anfitrión a tu máquina virtual utilizando `scp`.
+    5. **Simula la falla de uno de los discos virtuales** del arreglo RAID 5 (RAID 10 para G2) y reemplaza con un nuevo disco.
+    6. **Verifica que los archivos creados en el paso 4 sigan accesibles** desde el punto de montaje `/mnt/raid5` (`/mnt/raid10` para G2). Intenta leer su contenido.
+    7. **Verifica el estado del arreglo RAID** y describe el estado.
 
 
 ### ✅ Evaluación del Laboratorio
@@ -150,7 +150,7 @@ La empresa **"TechSolutions Inc."** te ha solicitado que prepares un servidor pa
 **Prepara un informe individual que incluya:**
 
 - Capturas de pantalla de los comandos exactos que utilizaste en cada paso.
-- Capturas de pantalla que muestren la creación del RAID 5, la simulación del fallo y el estado del arreglo después del fallo.
+- Capturas de pantalla que muestren la creación del RAID 5 (RAID 10 para G2), la simulación del fallo y el estado del arreglo después del fallo.
 - Una descripción detallada de lo que observaste al intentar acceder a los archivos después de la falla simulada.
-- Una explicación de cómo RAID 5 permite la tolerancia a fallos en base al concepto de paridad distribuida.
-- Breve resumen de las lecciones aprendidas sobre cómo el RAID 5 proporciona redundancia y rendimiento, y una reflexión sobre la importancia de estas características en un entorno de producción.
+- Una explicación de cómo RAID 5 (RAID 10 para G2) permite la tolerancia a fallos en base al concepto de paridad distribuida.
+- Breve resumen de las lecciones aprendidas sobre cómo el RAID 5 (RAID 10 para G2) proporciona redundancia y rendimiento, y una reflexión sobre la importancia de estas características en un entorno de producción.
