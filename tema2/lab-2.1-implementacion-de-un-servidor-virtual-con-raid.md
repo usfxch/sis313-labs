@@ -62,7 +62,11 @@
 
         ```bash
         # Reemplaza con el nombre de usuario y grupo de tu SO
-        sudo chown <usuario>:<grupo> /mnt/raid1 echo "Hola Mundo" > /mnt/raid1/archivo_de_prueba.txt
+        sudo chown <usuario>:<grupo> /mnt/raid1
+        ```
+
+        ```bash
+        echo "Hola Mundo" > /mnt/raid1/archivo_de_prueba.txt
         ```
 
 2. **Configurar el RAID para que inicie desde el arranque**
