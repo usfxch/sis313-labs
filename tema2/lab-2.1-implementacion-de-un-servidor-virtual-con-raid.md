@@ -39,7 +39,26 @@
         sudo mdadm --create --verbose /dev/md1 --level=mirror --raid-devices=2 /dev/sdb /dev/sdc
         ```
 
-    - **Paso 3:** Escribe algunos archivos de prueba en `/mnt/raid`.
+         ```bash
+        cat /proc/mdstat
+        ```
+
+    - **Paso 3:**:
+        ```bash
+        sudo mkfs.ext4 /dev/md1
+        ```
+
+    - **Paso 4:**:
+        ```bash
+        sudo mkdir /mnt/raid1
+        ```
+
+    - **Paso 5:**:
+        ```bash
+        sudo mount /dev/md1 /mnt/raid1
+        ```
+
+    - **Paso 6:** Escribe algunos archivos de prueba en `/mnt/raid`.
 
         ```bash
         # Reemplaza con el nombre de usuario y grupo de tu SO
