@@ -71,6 +71,11 @@
 
 2. **Configurar el RAID para que inicie desde el arranque**
     - Añadir al archivo `/etc/fstab` el montaje del disco RAID (utiliza el editor `nano`):
+
+        ```bash
+        sudo blkid
+        ```
+
         ```bash
         UUID=<UUID del RAID>  /mnt/raid1  ext4  defaults,nofail  0  2
         ```
