@@ -134,6 +134,11 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
             fi
             ```
         
+         - Asigna permisos de ejecución al archivo:
+            ```bash
+            sudo chmod 755 /etc/keepalived/check_nginx.sh
+            ```
+
         - Modificar el contenido del archivo `/etc/keepalived/keepalived.conf` del servidor `Lab2.2-servidor-ha1` (MAESTRO):
             ```keepalived
             vrrp_script check_nginx {
@@ -203,7 +208,7 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
         sudo apt install rsync -y
         ```
 
-    2. Creación de un directorio `data` con **archivos importantes** en el servidor `Lab2.2-servidor-ha1` (MAESTRO):
+    2. **Creación de un directorio `data` con archivos importantes** en el servidor `Lab2.2-servidor-ha1` (MAESTRO):
         ```bash
         mkdir ~/data
         ```
@@ -212,20 +217,38 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
         cd ~/data && touch importante{1..100}.dat
         ```
 
-    3. **Sincronización el directorio** `~/data` del servidor `Lab2.2-servidor-ha1` (MAESTRO) en el servidor `Lab2.2-servidor-ha2` (ESCLAVO):
+    3. **Configura la clave pública SSH para la conexión automática:**
+
+        - En el servidor `Lab2.2-servidor-ha1` (MAESTRO), genera la clave SSH. No ingreses ninguna contraseña cuando se te solicite:
+            ```bash
+            ssh-keygen -t rsa
+            ```
+
+        - Copia la clave pública al servidor `Lab2.2-servidor-ha1` (ESCLAVO). Reemplaza usuario por el nombre de usuario y la IP de tu máquina esclava:
+            ```bash
+            ssh-copy-id <usuario>@<IP del servidor ESCLAVO>
+            ```
+        
+        - Verifica la conexión automática:
+            ```bash
+            ssh <usuario>@<IP del servidor ESCLAVO>
+            ```
+            > Con esto, ya no debería pedirte una contraseña.
+
+    4. **Sincronización el directorio** `~/data` del servidor `Lab2.2-servidor-ha1` (MAESTRO) en el servidor `Lab2.2-servidor-ha2` (ESCLAVO):
         ```bash
         # Reemplaza el usuario y la IP del servidor ESCLAVO
         rsync -azP ~/data <usuario>@<IP del servidor ESCLAVO>:~/data
         ```
     
-    4. Modifica el contenido de un archivo del directorio `~/data` con `nano` del servidor MAESTRO y vuelve a sincronizar:
+    5. Modifica el contenido de un archivo del directorio `~/data` con `nano` del servidor MAESTRO y vuelve a sincronizar:
         ```bash
         # Reemplaza el nombre de usuario y la IP del servidor ESCLAVO
         rsync -azP ~/data <usuario>@<IP del servidor ESCLAVO>:~/data
         ```
         > Identifica qué tipo de sincronización se realizó. ¿Fue total o incremental?
     
-    5. Automatización con `crontab`:
+    6. Automatización con `crontab`:
 
         - Abre el editor de crontab en servidor MAESTRO: 
             ```bash
@@ -249,7 +272,7 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
             `*` (cuarto asterisco): Mes (1-12)
 
             `*` (quinto asterisco): Día de la semana (0-6, donde 0 es domingo)
-    6. **Simulación de pérdida de datos:** Borra un archivo del servidor MAESTRO:
+    7. **Simulación de pérdida de datos:** Borra un archivo del servidor MAESTRO:
         ```bash
         rm importante10.dat
         ```
