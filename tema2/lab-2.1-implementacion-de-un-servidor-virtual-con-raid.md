@@ -166,7 +166,7 @@
 
 **La redundancia es crucial para la tolerancia a fallos en sistemas de almacenamiento críticos.**
 
-## ⚙️ Sección 3: Ejercicio Práctico de implementación de un servidor virtual con RAID 5 y RAID 10
+## ⚙️ Sección 3: Práctica Individual. Implementación de un servidor virtual con RAID 5 y RAID 10
 
 ### 📋 Escenario del Laboratorio
 

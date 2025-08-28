@@ -15,4 +15,4 @@
 
 ### Tema 2: Infraestructura de Hardware
 - [Laboratorio 2.1: Implementación de un servidor virtual con RAID.](tema2/lab-2.1-implementacion-de-un-servidor-virtual-con-raid.md)
-- [Laboratorio 2.2: Simulación de un escenario de failover y configuración de un sistema de respaldo para un servidor, demostrando la tolerancia a fallos.](#)
+- [Laboratorio 2.2: Simulación de un escenario de Failover y configuración de un sistema de Respaldo](tema2/lab-2.2-simulacion-de-un-escenario-de-failover-y-configuracion-de-un-sistema-de-respaldo.md)
