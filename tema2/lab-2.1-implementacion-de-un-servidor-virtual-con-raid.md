@@ -79,7 +79,7 @@
         > Crea un archivo de texto en el directorio del RAID.
 
         ```bash
-        dd if=/dev/zero of=archivo_grande_1.dat bs=1M count=1024
+        cd /mnt/raid1 && dd if=/dev/zero of=archivo_grande_1.dat bs=1M count=1024
         ```
         > Crea un archivo de 1GB dentro del directorio del RAID.
 
