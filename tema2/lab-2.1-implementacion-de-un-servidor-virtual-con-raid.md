@@ -28,13 +28,13 @@
 ### Creación del Arreglo RAID 1
 
 1. **Creación del Sistema de Archivos y Montaje**
-    - **Paso 1:** Antes de crear el RAID, identifica los nombres de los discos adicionales:
+    - **Paso 1.** Antes de crear el RAID, identifica los nombres de los discos adicionales:
 
         ```bash
         sudo fdisk -l
         ```
 
-    - **Paso 2:** Ahora para crear un arreglo **RAID 1 (Mirroring)** con `/dev/sdb` y `/dev/sdc`:
+    - **Paso 2.** Ahora para crear un arreglo **RAID 1 (Mirroring)** con `/dev/sdb` y `/dev/sdc`:
         ```bash
         sudo mdadm --create --verbose /dev/md1 --level=mirror --raid-devices=2 /dev/sdb /dev/sdc
         ```
@@ -42,23 +42,23 @@
          ```bash
         cat /proc/mdstat
         ```
+        > Muestra el estado actual de las arreglos RAID de software.
 
-    - **Paso 3:**:
+    - **Paso 3.** Crea un sistema de archivos de tipo `EXT4` en el dispositivo `/dev/md1`:
         ```bash
         sudo mkfs.ext4 /dev/md1
         ```
 
-    - **Paso 4:**:
+    - **Paso 4.** Crea un directorio llamado `raid1` dentro de `/mnt/` y luego monta el dispositivo RAID 1 `/dev/md1` en ese nuevo directorio:
         ```bash
         sudo mkdir /mnt/raid1
         ```
 
-    - **Paso 5:**:
         ```bash
         sudo mount /dev/md1 /mnt/raid1
         ```
 
-    - **Paso 6:** Escribe algunos archivos de prueba en `/mnt/raid`.
+    - **Paso 5.** Escribe algunos archivos de prueba en `/mnt/raid`.
 
         ```bash
         # Reemplaza con el nombre de usuario y grupo de tu SO
@@ -68,6 +68,12 @@
         ```bash
         echo "Hola Mundo" > /mnt/raid1/archivo_de_prueba.txt
         ```
+        > Crea un archivo de texto en el directorio del RAID.
+
+        ```bash
+        dd if=/dev/zero of=archivo_grande_1.dat bs=1M count=1024
+        ```
+        > Crea un archivo de 1GB dentro del directorio del RAID.
 
 2. **Configurar el RAID para que inicie desde el arranque**
     - Añadir al archivo `/etc/fstab` el montaje del disco RAID (utiliza el editor `nano`):
@@ -75,6 +81,7 @@
         ```bash
         sudo blkid
         ```
+        > Muestra información detallada de los dispositivos de bloque, como discos duros y particiones, incluyendo sus etiquetas, tipos de sistema de archivos y, sobre todo, sus `UUID` (Universal Unique Identifiers), los cuales son identificadores únicos universales. Identifica el `UUID` del RAID `md1` y reemplazalo en el siguiente comando.
 
         ```bash
         UUID=<UUID del RAID>  /mnt/raid1  ext4  defaults,nofail  0  2
@@ -99,12 +106,12 @@
         ```bash
         sudo mdadm --manage /dev/md1 --fail /dev/sdb
         ```
+        > Marca el disco `/dev/sdb `como fallido dentro del RAID `/dev/md1`.
 
         ```bash
         sudo mdadm --manage /dev/md1 --remove /dev/sdb
         ```
-
-        > **¡Importante! No desconectar discos virtuales directamente desde VirtualBox mientras la VM está corriendo.**
+        > Elimina el dispositivo `/dev/sdb` del RAID `/dev/md1`.
 
 4. **Verificación de la Integridad de los Datos**
 
