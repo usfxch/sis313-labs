@@ -183,3 +183,141 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
 
         - Verifica si el servidor web continua funcionando en `http://172.16.30.100`.
 
+### Ejercicio 2: Creación de un Respaldo de Datos con rsync y crontab
+
+- **Concepto:** La alta disponibilidad protege la continuidad del servicio, pero no los datos. Un sistema de respaldo es necesario para protegerse contra la pérdida de datos. `rsync` es una herramienta poderosa que sincroniza archivos de forma incremental, lo que es muy eficiente. Además, usaremos `crontab` para automatizar el proceso.
+
+- **Pasos a seguir:**
+    1. **Instala** `rsync` en ambas máquinas:
+        ```bash
+        sudo apt install rsync -y
+        ```
+
+    2. Creación de un directorio `data` con **archivos importantes** en el servidor `Lab2.2-servidor-ha1` (MAESTRO):
+        ```bash
+        mkdir ~/data
+        ```
+
+        ```bash
+        cd ~/data && touch importante{1..100}.dat
+        ```
+
+    3. **Sincronización el directorio** `~/data` del servidor `Lab2.2-servidor-ha1` (MAESTRO) en el servidor `Lab2.2-servidor-ha2` (ESCLAVO):
+        ```bash
+        # Reemplaza la IP del servidor ESCLAVO
+        rsync -azP ~/data marcelo@<IP del servidor ESCLAVO>:~/data
+        ```
+    
+    4. Modifica el contenido de un archivo del directorio `~/data` con `nano` del servidor MAESTRO y vuelve a sincronizar:
+        ```bash
+        # Reemplaza el nombre de usuario y la IP del servidor ESCLAVO
+        rsync -azP ~/data <usuario>@<IP del servidor ESCLAVO>:~/data
+        ```
+        > Identifica qué tipo de sincronización se realizó. ¿Fue total o incremental?
+    
+    5. Automatización con `crontab`:
+
+        - Abre el editor de crontab en servidor MAESTRO: 
+            ```bash
+            crontab -e
+            ```
+            > Selecciona un editor de texto (si te lo solicita).
+
+        - Añade la siguiente línea al final del archivo para que el respaldo se ejecute cada minuto. Asegúrate de reemplazar `usuario` con tu nombre de usuario y el IP del servidor ESCLAVO.
+            ```bash
+            # Reemplaza el nombre de usuario y la IP del servidor ESCLAVO
+            * * * * * rsync -azP ~/data <usuario>@<IP del servidor ESCLAVO>:~/data
+            ```
+            Explicación de los asteriscos de `crontab`:
+
+            `*` (primer asterisco): Minuto (0-59)
+
+            `*` (segundo asterisco): Hora (0-23)
+
+            `*` (tercer asterisco): Día del mes (1-31)
+
+            `*` (cuarto asterisco): Mes (1-12)
+
+            `*` (quinto asterisco): Día de la semana (0-6, donde 0 es domingo)
+    6. **Simulación de pérdida de datos:** Borra un archivo del servidor MAESTRO:
+        ```bash
+        rm importante10.dat
+        ```
+
+**Puntos Clave**
+
+- **Alta Disponibilidad vs. Respaldo:** Explica con tus propias palabras la diferencia entre estos dos conceptos. ¿Cómo se complementan para un plan de contingencia completo?
+
+- **Propósito del Failover:** ¿Qué función cumple el failover en un escenario de alta disponibilidad?
+
+- **Importancia de un DRP:** ¿Por qué un plan de contingencia es vital para un centro de datos o una infraestructura de TI?
+
+## ⚙️ Sección 3: Práctica en Grupo
+
+Esta es tu oportunidad para demostrar que puedes aplicar los conceptos de manera colaborativa. Deberán coordinarse para configurar un clúster real entre sus computadoras.
+
+### 🤝 Escenario de la Práctica
+
+Trabajando en parejas, cada estudiante configurará una máquina virtual que actuará como un nodo en un clúster de alta disponibilidad.
+
+- El **Estudiante A** configurará su máquina virtual como el nodo `MASTER` (`servidor-ha1`).
+
+- El **Estudiante B** configurará su máquina virtual como el nodo `BACKUP` (`servidor-ha2`).
+
+- Ambos estudiantes deben tener sus máquinas virtuales configuradas con un **adaptador de red en modo puente** para que puedan comunicarse entre sí en la red local del laboratorio.
+
+- Asegúrense de que las direcciones IP de sus máquinas virtuales estén en el mismo rango de red que la red local.
+
+### 🚀 Tareas a Realizar
+
+1. **Configuración de Adaptador de Red:**
+
+    - En VirtualBox, vayan a la configuración de su máquina virtual.
+
+    - Naveguen a **Red > Adaptador 1**.
+
+    - Seleccionen el menú desplegable y cambien **"NAT"** a **"Adaptador Puente"**.
+
+    - Seleccionen la tarjeta de red de su computadora anfitriona que está conectada al internet.
+
+2. **Validación de Conectividad:**
+
+    - Asegúrense de que las máquinas de ambos estudiantes puedan hacer `ping` entre sí.
+
+3. **Configuración del Clúster HA:**
+
+    - Cada estudiante debe configurar su respectivo nodo (`MASTER` y `BACKUP`) siguiendo las instrucciones del Ejercicio 1 de la Sección 2.
+
+    - Utilicen una **dirección IP flotante** que no esté en uso en la red local del laboratorio.
+
+4. **Simulación de Failover (Conmutación por error):**
+
+    - Desde la máquina del Estudiante A, verifiquen que el servicio web está funcionando a través de la IP flotante.
+
+    - El Estudiante A detendrá el servicio web (`sudo systemctl stop nginx`).
+
+    - El Estudiante B, desde su máquina, intentará acceder a la IP flotante y verificará que su servidor ha tomado el control.
+
+5. **Simulación de Respaldo y Recuperación:**
+
+    - El Estudiante A creará el archivo de datos y lo configurará para ser respaldado cada minuto en la máquina del Estudiante B usando `crontab`.
+
+    - El Estudiante A simulará una pérdida de datos borrando algunos archivos.
+
+    - El Estudiante B verificará la presencia de los archivos de datos en su máquina.
+
+### ✅ Evaluación del Laboratorio
+
+La evaluación se basará en un informe detallado con capturas de pantalla que demuestren cada uno de los pasos realizados. El informe debe incluir:
+
+1. **Captura de la configuración de red en VirtualBox** mostrando el adaptador puente.
+
+2. **Demostración de la conectividad** (ej. resultado del comando `ping`).
+
+3. **Captura de pantalla de la configuración de Keepalived** en ambos nodos.
+
+4. **Verificación del servicio** antes y después del failover.
+
+5. **Demostración del respaldo** mostrando la entrada de crontab y la presencia del archivo en el servidor del Estudiante B.
+
+6. **Conclusiones Conjuntas:** Un breve resumen de las lecciones aprendidas sobre cómo el trabajo en equipo, la **Alta Disponibilidad** y los **sistemas de respaldo** son necesarios para un plan de contingencia completo.
