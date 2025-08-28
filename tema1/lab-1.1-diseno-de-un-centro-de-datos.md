@@ -1,5 +1,13 @@
 # Laboratorio 1.1: Diseño de un Centro de Datos Tier II y Plan de Continuidad Operacional
 
+**Universidad San Francisco Xavier de Chuquisaca**
+
+**Asignatura:** Infraestructura, Plataformas Tecnológicas y Redes (SIS313)
+
+**Docente:** Ing. Marcelo Quispe Ortega
+
+**Semestre:** 2/2025
+
 ## 🎯 Objetivo del Laboratorio
 
 - **Identificar y aplicar** conceptos clave de la infraestructura de TI para el diseño de un centro de datos que cumpla con los estándares de **Tier II**.

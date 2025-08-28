@@ -1,5 +1,13 @@
 # Laboratorio 2.1: Implementación de un servidor virtual con RAID
 
+**Universidad San Francisco Xavier de Chuquisaca**
+
+**Asignatura:** Infraestructura, Plataformas Tecnológicas y Redes (SIS313)
+
+**Docente:** Ing. Marcelo Quispe Ortega
+
+**Semestre:** 2/2025
+
 ## 🎯 Objetivo del Laboratorio
 
 - **Implementar y configurar** un arreglo RAID en un servidor virtual usando discos virtuales.

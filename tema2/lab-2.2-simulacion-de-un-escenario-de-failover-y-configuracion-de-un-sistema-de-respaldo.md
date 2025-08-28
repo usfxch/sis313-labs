@@ -1,5 +1,13 @@
 # Laboratorio 2.2: Simulación de un escenario de Failover y configuración de un sistema de Respaldo
 
+**Universidad San Francisco Xavier de Chuquisaca**
+
+**Asignatura:** Infraestructura, Plataformas Tecnológicas y Redes (SIS313)
+
+**Docente:** Ing. Marcelo Quispe Ortega
+
+**Semestre:** 2/2025
+
 ## 🎯 Objetivo del Laboratorio
 
 - **Configurar un entorno** para simular un escenario de failover (conmutación por error) usando herramientas de software.
@@ -28,7 +36,9 @@
 
 ## 💻 Sección 2: Práctica guiada
 
-En esta sección, se te guiará a través de ejercicios y ejemplos para que te familiarices con los conceptos de failover y respaldo. Al final, debes poder explicar los **Puntos Clave** de la práctica.
+En esta sección, se te guiará a través de ejercicios y ejemplos para que te familiarices con los conceptos de failover y respaldo. 
+
+**IMPORTANTE:** Para estos ejercicios se considera como ejemplo el uso de las IPs `172.16.30.11` para el servidor `Lab2.2-servidor-ha1` (MAESTRO), `172.16.30.12` para el servidor `Lab2.2-servidor-ha2` (ESCLAVO) y `172.16.30.100` para la IP virtual compartida del clúster. En tu caso, debes reemplazar estas IPs por las que te asigne tu red.
 
 ### Ejercicio 1: Configuración de Alta Disponibilidad con Keepalived
 
@@ -41,7 +51,7 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
             sudo nano /etc/keepalived/keepalived.conf
             ```
 
-        - Reemplaza el contenido del archivo con la siguiente configuración, adaptando la IP flotante (ej. `192.168.1.100`) y las interfaces de red (ej. `enp0s3`) según tu subred y tu entorno:
+        - Reemplaza el contenido del archivo con la siguiente configuración, adaptando la IP flotante (ej. `172.16.30.100`) y las interfaces de red (ej. `enp0s3`) según tu subred y tu entorno:
             ```keepalived
             vrrp_instance VI_1 {
                 state MASTER                # Estado inicial del nodo
@@ -204,8 +214,8 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
 
     3. **Sincronización el directorio** `~/data` del servidor `Lab2.2-servidor-ha1` (MAESTRO) en el servidor `Lab2.2-servidor-ha2` (ESCLAVO):
         ```bash
-        # Reemplaza la IP del servidor ESCLAVO
-        rsync -azP ~/data marcelo@<IP del servidor ESCLAVO>:~/data
+        # Reemplaza el usuario y la IP del servidor ESCLAVO
+        rsync -azP ~/data <usuario>@<IP del servidor ESCLAVO>:~/data
         ```
     
     4. Modifica el contenido de un archivo del directorio `~/data` con `nano` del servidor MAESTRO y vuelve a sincronizar:
@@ -243,14 +253,6 @@ En esta sección, se te guiará a través de ejercicios y ejemplos para que te f
         ```bash
         rm importante10.dat
         ```
-
-**Puntos Clave**
-
-- **Alta Disponibilidad vs. Respaldo:** Explica con tus propias palabras la diferencia entre estos dos conceptos. ¿Cómo se complementan para un plan de contingencia completo?
-
-- **Propósito del Failover:** ¿Qué función cumple el failover en un escenario de alta disponibilidad?
-
-- **Importancia de un DRP:** ¿Por qué un plan de contingencia es vital para un centro de datos o una infraestructura de TI?
 
 ## ⚙️ Sección 3: Práctica en Grupo
 

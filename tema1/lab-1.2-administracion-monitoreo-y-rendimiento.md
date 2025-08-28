@@ -1,5 +1,13 @@
 # Laboratorio 1.2: Administración, Monitoreo y Rendimiento de Servidores Ubuntu Server 24.04 LTS
 
+**Universidad San Francisco Xavier de Chuquisaca**
+
+**Asignatura:** Infraestructura, Plataformas Tecnológicas y Redes (SIS313)
+
+**Docente:** Ing. Marcelo Quispe Ortega
+
+**Semestre:** 2/2025
+
 ## 🎯 Objetivo del Laboratorio
 
 - **Instalar y configurar** un entorno de servidor virtualizado con Ubuntu Server.
