@@ -188,9 +188,9 @@ En grupos de 3 o 4, deberán configurar una arquitectura con **un balanceador de
 
 ### ✅ Evaluación del Laboratorio
 
-La evaluación de este laboratorio se basará en los siguientes puntos, que demuestran el dominio de los conceptos y la correcta ejecución de los pasos. El informe debe ser detallado con capturas de pantalla que demuestren cada uno de los pasos realizados. El informe debe incluir:
+La evaluación de este laboratorio se basará en los siguientes puntos, que demuestran el dominio de los conceptos y la correcta ejecución de los pasos.
 
-1. **Configuración del Entorno y Preparación (20%)**
+1. **Configuración del Entorno y Preparación (10 pts)**
 
     - **Configuración de la Red Interna:**
 
@@ -208,7 +208,7 @@ La evaluación de este laboratorio se basará en los siguientes puntos, que demu
 
         - Confirma que los servidores web NGINX estén configurados como proxy inverso para las aplicaciones "Hola Mundo" en PHP o Node.js.
 
-2. **Práctica Guiada (30%)**
+2. **Práctica Guiada (20 pts)**
 
     - **Configuración de Balanceo de Carga:**
 
@@ -222,7 +222,7 @@ La evaluación de este laboratorio se basará en los siguientes puntos, que demu
 
         - **IP Hash:** Demuestra que al refrescar el navegador, la conexión se mantiene en el mismo servidor, garantizando la persistencia de la sesión.
 
-3. **Práctica en Grupo y Demostración (50%)**
+3. **Práctica en Grupo y Demostración (40 pts)**
 
     - **Diseño de la Arquitectura:**
 
@@ -241,3 +241,7 @@ La evaluación de este laboratorio se basará en los siguientes puntos, que demu
     - **Presentación y Colaboración:**
 
         - Se evaluará la capacidad del grupo para explicar los pasos, los desafíos encontrados y las soluciones implementadas. La colaboración y el trabajo en equipo son fundamentales.
+
+4. **Informe de Laboratorio (30 pts)**
+
+    El informe debe ser detallado con capturas de pantalla que demuestren cada uno de los pasos realizados.
