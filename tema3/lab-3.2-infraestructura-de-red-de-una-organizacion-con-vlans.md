@@ -38,25 +38,163 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
 
     - **Importante:** En la configuración de la red de tu hipervisor, asegúrate de que la "Red Interna" esté configurada como un switch que permite el paso de tramas etiquetadas (VLAN-aware).
 
-    | Máquina Virtual | Departamento | VLAN ID | Subred |
-    | ----------------|--------------|---------|--------|
-    | `Router`        | -            | -       | 192.168.10.1/29 <br> 192.168.20.1/29 <br> 192.168.30.1/27 <br> 192.168.40.1/29 |
-    | `Server-DMZ1`   | 
+**Esquema de la Infraestructura**
+
+| Máquina Virtual | Departamento | VLAN ID | Subred |
+| ----------------|--------------|---------|--------|
+| `Router`        | -            | -       | 192.168.10.1/29 <br> 192.168.20.1/29 <br> 192.168.30.1/27 <br> 192.168.40.1/29 |
+| `Server-DMZ1`   | DMZ          | 10      | 192.168.10.2/29 |
+| `Server-DMZ2`	  | DMZ	         | 10	   | 192.168.10.3/29 |
+| `PC-TI`         | TI           | 20      | 192.168.20.2/29 |
+| `PC-Ventas`     | Ventas       | 30      | 192.168.30.2/27 |
+| `PC-Contabilidad`| Contabilidad       | 40      | 192.168.40.2/29 |
 
 ## 💻 Sección 2: Práctica guiada
 
-### Paso 1: Instalación y Configuración de Red durante la instalación del S.O.
+### Paso 1: Configuración de VLANs y Router
 
+- **En la VM Router (Ubuntu):**
+
+    - Instala las herramientas necesarias para trabajar con VLANs:
+
+        ```bash
+        sudo apt install vlan.
+        ```
+
+    - Carga el módulo del kernel para VLANs: 
+
+        ```bash
+        sudo modprobe 8021q.
+        ```
+
+    - Configura las interfaces de red VLAN. Para el enrutamiento inter-VLAN, cada sub-interfaz tendrá un gateway que será su propia dirección IP.
+
+    - Edita el archivo de configuración de red para crear las sub-interfaces virtuales (ej. `enp0s8.10`, `enp0s8.20`, etc.) y asignarles las IPs estáticas de cada VLAN.
+
+- **Enrutamiento y NAT:**
+
+    - Habilita el reenvío de paquetes:
+    
+        ```bash
+        sudo sysctl -w net.ipv4.ip_forward=1.
+        ```
+
+    - Configura las reglas de `iptables` para permitir el acceso a internet para las VLANs que lo requieran (TI y Contabilidad).
+
+### Paso 2: Configuración de la VM de Contabilidad
+
+- **En la VM de Contabilidad (Alpine):**
+
+    - Instala la herramienta `vlan`:
+    
+        ```bash
+        sudo apk add vlan.
+        ```
+
+    - Configura la interfaz de red con la VLAN 40.
+
+    - Asigna la IP estática `192.168.40.2` con la máscara `/29`.
+
+    - Configura el gateway a la IP del router en esa VLAN: `192.168.40.1`.
+
+    - **Prueba:** Verifica la conexión con el router (`ping 192.168.40.1`) y el acceso a internet (`ping google.com`).
+
+### Paso 3: Configuración de la VM de Ventas
+
+- **En la VM de Ventas (Alpine):**
+
+    - Instala la herramienta `vlan`:
+
+        ```bash
+        sudo apk add vlan.
+        ```
+
+    - Configura la interfaz de red con la VLAN 30.
+
+    - Asigna la IP estática `192.168.30.2` con la máscara `/27`.
+
+    - Configura el gateway a la IP del router: `192.168.30.1`.
+
+    - **Prueba:** Verifica la conexión con el router (`ping 192.168.30.1`) pero confirma que **no tiene acceso a internet**.
+
+### Paso 4: Configuración de UFW en el Router
+
+- **En la VM Router (Ubuntu):**
+
+    - Instala y habilita `ufw`: 
+    
+        ```bash
+        sudo apt install ufw && sudo ufw enable
+        ```
+
+    - Configura las siguientes reglas para controlar el tráfico entre las VLANs. Es crucial establecer las reglas en el orden correcto.
+
+        ```bash
+        # Permiso para IT (VLAN 20) a todos
+        sudo ufw allow in on enp0s8.20
+        ```
+
+        ```bash
+        # Permiso para Contabilidad (VLAN 40) a DMZ y Ventas
+        sudo ufw allow in on enp0s8.40 to 192.168.10.0/29
+        sudo ufw allow in on enp0s8.40 to 192.168.30.0/27
+        ```
+
+        ```bash
+        # Permiso para Ventas (VLAN 30) a DMZ
+        sudo ufw allow in on enp0s8.30 to 192.168.10.0/29
+        ```
+
+        ```bash
+        # Denegar acceso de DMZ (VLAN 10) a todos
+        sudo ufw deny in on enp0s8.10
+        ```
+
+    - **Pruebas:** Desde la VM de Ventas, haz `ping` a la IP de Contabilidad y a una IP de la DMZ para verificar el acceso.
 
 ## ⚙️ Sección 3: Práctica en Grupo
 
+Se requiere que el grupo complete la configuración de la infraestructura en una única PC anfitriona con mayores recursos. Los miembros del grupo que no tengan acceso a esta PC pueden seguir el mismo proceso en sus equipos personales, replicando la configuración hasta donde sus recursos lo permitan.
 
+El objetivo es que el o los estudiantes completen la configuración de las **VLANs 10 y 20 (DMZ y TI)** y todas las reglas de UFW correspondientes para cumplir con las restricciones establecidas:
+
+- **VMs DMZ (VLAN 10)**: Deben estar configuradas con sus IPs estáticas. Su acceso a internet y a las otras VLANs debe estar denegado por defecto.
+
+- **VM de TI (VLAN 20)**: Debe estar configurada con su IP estática. Debe tener acceso a internet y a todas las otras VLANs (DMZ, Ventas y Contabilidad).
+
+Al final del ejercicio, el grupo deberá demostrar a través de pruebas de conectividad (ej. `ping`, `traceroute`, acceso a sitios web) que todas las políticas de acceso y denegación están funcionando correctamente.
 
 ### ✅ Evaluación del Laboratorio
 
-La evaluación de este laboratorio se basará en los siguientes puntos, que demuestran el dominio de los conceptos y la correcta ejecución de los pasos.
+La evaluación de este laboratorio se centrará en la correcta implementación de la arquitectura y el funcionamiento de las políticas de seguridad. Se valorará la habilidad para resolver problemas y la comprensión de los conceptos clave.
 
+1. **Configuración del Entorno y Enrutamiento (10 pts)**
 
+    - **Configuración del Router:** Demuestra que las interfaces VLAN y el enrutamiento inter-VLAN están correctamente configurados en el router de Ubuntu.
+
+    - **Conectividad de las VLANs:** Confirma que las máquinas virtuales de **Contabilidad** y **Ventas** están en sus respectivas VLANs, que tienen las IPs estáticas y el gateway correctos.
+
+    - **Acceso a Internet:** Verifica que la VLAN de Contabilidad tiene acceso a internet y que la VLAN de Ventas no lo tiene, tal como lo exige el problema.
+
+2. **Implementación de Políticas de Acceso (20 pts)**
+
+    - **Reglas de UFW:** Presenta la configuración de UFW en el router y explica cómo cada regla permite o deniega el tráfico entre las VLANs.
+
+    - **Pruebas de Conectividad:**
+
+        - Demuestra que la VLAN de Contabilidad puede acceder a la VLAN de Ventas y a la DMZ.
+
+        - Demuestra que la VLAN de Ventas solo puede acceder a la DMZ.
+
+        - Confirma que la VLAN de la DMZ no tiene acceso a las otras VLANs ni a internet.
+
+3. **Práctica en Grupo y Demostración (40 pts)**
+
+    - **Configuración de las VLANs Restantes:** El grupo debe mostrar que las VLANs **10 (DMZ)** y **20 (TI)** están correctamente configuradas, incluyendo sus IPs estáticas y el enrutamiento.
+
+    - **Aplicación de Políticas:** Demuestra que las políticas de acceso para TI (acceso a todos los departamentos y a internet) y para la DMZ (sin acceso saliente) funcionan como se espera.
+
+    - **Colaboración y Presentación:** La evaluación considerará la calidad del trabajo en equipo, la claridad de la presentación y la capacidad para explicar la configuración y las pruebas realizadas.
 
 4. **Informe de Laboratorio (30 pts)**
 
