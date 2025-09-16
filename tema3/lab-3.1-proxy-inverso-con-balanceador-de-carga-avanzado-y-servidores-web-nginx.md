@@ -41,7 +41,7 @@ En esta sección, se configurará la infraestructura en tu software de virtualiz
 
                 - IP: `192.168.10.1`
 
-                - Máscara de subred: `255.255.255.248` (equivalente a /29).
+                - Máscara de subred: `255.255.255.248` (equivalente a `/29`).
 
 2. **Máquina Virtual 2: Servidor Web 1**
 
@@ -101,13 +101,13 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
         sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
         ```
 
-        ```bash
-        sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT
-        ```
+        <!-- ```bash -->
+        <!-- sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT -->
+        <!-- ``` -->
 
-        ```bash
-        sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
-        ```
+        <!-- ```bash -->
+        <!-- sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT -->
+        <!-- ``` -->
 
     - Guarda las reglas para que persistan después de reiniciar el servidor.
 
