@@ -1,4 +1,4 @@
-# Laboratorio 2.2: Simulación de un escenario de Failover y configuración de un sistema de Respaldo
+# Laboratorio 3.1: Proxy Inverso con Balanceador de Carga Avanzado y Servidores Web NGINX
 
 **Universidad San Francisco Xavier de Chuquisaca**
 
