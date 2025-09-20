@@ -147,13 +147,45 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     ```
     Interface
     ---------
-    .....
+    
     Which one do you want to initialize? (or '?' or 'done') [eth0] ⮐
     
     IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] ⮐ 
 
     Do you want to do any manual network configuration? (y/n) [n] ⮐ 
     ```
+
+7. Introduce la contraseña del usuario root:
+    ```
+    Root password
+    -------------
+    New password: ****** ⮐
+    Retype password: ****** ⮐
+    ```
+
+8. Selecciona la zona horaria:
+    ```
+    Timezone
+    --------
+    .....
+    Which timezone are you in? (or '?' or 'none') [UTC] America/La_Paz ⮐
+    ```
+
+    <pre>
+    Timezone
+    --------
+    .....
+    Which timezone are you in? (or '?' or 'none') [UTC] <strong>America/La_Paz</strong> ⮐
+</pre>
+- Configuración del Proxy (Internet):
+    Proxy
+    -----
+    HTTP/FTP proxy URL? (e.g. 'http://proxy:8080', or 'none') [none] (Enter)
+- Configuración del servidor NTP:
+    Network Time Protocol
+    ---------------------
+    .....
+    Which NTP client to run? ('busybox', 'openntp', 'chrony' or 'none') [busybox] (Enter)
 
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
 
