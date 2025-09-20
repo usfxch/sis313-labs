@@ -121,7 +121,7 @@ Seguir los pasos realizados en anteriores laboratorios a diferencia de la config
 Iniciar la máquina virtual y seguir los siguientes pasos:
 1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
     <pre>
-    ...
+    (...)
     localhost login: <strong>root</strong> ⮐
 </pre>
 
@@ -151,7 +151,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     <pre>
     Interface
     ---------
-    ...
+    (...)
     Which one do you want to initialize? (or '?' or 'done') [eth0] ⮐
     
     IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] ⮐ 
@@ -171,7 +171,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     <pre>
     Timezone
     --------
-    ...
+    (...)
     Which timezone are you in? (or '?' or 'none') [UTC] <strong>America/La_Paz</strong> ⮐
 </pre>
 
@@ -186,7 +186,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     <pre>
     Network Time Protocol
     ---------------------
-    ...
+    (...)
     Which NTP client to run? ('busybox', 'openntp', 'chrony' or 'none') [busybox] ⮐
     </pre>
 
@@ -194,7 +194,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     <pre>
     APK Mirror
     ----------
-    ...
+    (...)
     Enter mirror number or URL: [1] ⮐
     </pre>
 
@@ -203,14 +203,14 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
      User 
     ------
     Setup a user? (enter a lower-case loginname, or 'no') [no] <strong>marcelo</strong> ⮐
-    ...
+    (...)
     Full name for user marcelo [marcelo] <strong>Marcelo Quispe Ortega</strong> ⮐
-    ...
+    (...)
     New password: <strong>******</strong> ⮐
     Retype password: <strong>******</strong> ⮐
-    ...
+    (...)
     Enter ssh key or URL for marcelo (or 'none') [none] ⮐
-    ...
+    (...)
     Which ssh server? ('openssh', 'dropbear' or 'none') [openssh] ⮐
     </pre>
 
@@ -219,11 +219,11 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     Disk & Install
     --------------
     Which disk(s) would you like to use? (or '?' for help or 'none') [none] <strong>sda</strong> ⮐
-    ...
+    (...)
     How would you like to use it? ('sys', 'data', 'crypt', 'lvm' or '?' for help) [?] <strong>sys</strong> ⮐
-    ...
+    (...)
     WARNING: Erase the above disk(s) and continue? (y/n) [n] <strong>y</strong> ⮐
-    ...
+    (...)
     Installation is complete. Please reboot.
     webserver1:~# <strong>poweroff</strong> ⮐
     </pre>
