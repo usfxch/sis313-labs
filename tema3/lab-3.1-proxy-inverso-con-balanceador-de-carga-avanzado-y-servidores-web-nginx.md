@@ -270,14 +270,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
 
 
-
-### Paso 1: Instalación y Configuración de Red durante la instalación del S.O.
-
-- **En Ubuntu Server (Proxy):** Durante la instalación, configura la red de forma manual. Deja la interfaz NAT (`enp0s3`) en **DHCP** para obtener una IP automáticamente y poder acceder a internet. Para la interfaz de red interna (`enp0s8`), configúrala con la **dirección IP estática** `192.168.10.1` y la máscara `/29`.
-
-- **En Alpine Linux (Servidores Backend):** Durante la instalación, configura la interfaz de red (`eth0`) de cada servidor con la **dirección IP estática** correspondiente (`192.168.10.2` para el Servidor 1 y `192.168.10.3` para el Servidor 2). Asegúrate de configurar la **máscara de subred** `/29` y el **gateway** como la IP del proxy (`192.168.10.1`).
-
-### Paso 2: Compartir Acceso a Internet desde el Proxy
+### Paso 4: Compartir Acceso a Internet desde el Proxy
 
 Para que los servidores backend puedan descargar e instalar paquetes, el servidor proxy debe actuar como un enrutador NAT.
 
@@ -313,7 +306,7 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
         sudo netfilter-persistent save
         ```
 
-### Paso 3: Configuración de los servidores web backend
+### Paso 5: Configuración de los servidores web backend
 
 - **Verifica la conexión a internet:** Desde los servidores Alpine, haz un `ping google.com` para confirmar que tienen acceso a internet.
 
@@ -325,7 +318,7 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 
 - **Configura NGINX como proxy inverso local:** En cada servidor Alpine, configura NGINX para que reenvíe las peticiones a un proceso local de PHP-FPM o Node.js. Crea un archivo `index.php` o `index.js` que muestre un mensaje de "Hola Mundo" e indique el nombre del servidor (ej. "¡Hola Mundo desde el Servidor 1!").
 
-### Paso 4: Configuración del balanceador de carga en el proxy (Ubuntu)
+### Paso 6: Configuración del balanceador de carga en el proxy (Ubuntu)
 
 - En el servidor Ubuntu, edita el archivo de configuración de NGINX.
 
@@ -352,7 +345,7 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 
     - Usa la directiva `proxy_pass` para reenviar las solicitudes al bloque `upstream`.
 
-### Paso 5: Verificación y comparación
+### Paso 7: Verificación y comparación
 
 - Desde tu máquina anfitriona, accede al balanceador de carga (`<IP de la interfaz NAT del Ubuntu>`).
 
