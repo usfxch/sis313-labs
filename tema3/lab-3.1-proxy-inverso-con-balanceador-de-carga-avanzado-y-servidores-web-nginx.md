@@ -29,53 +29,129 @@ En esta sección, se configurará la infraestructura en tu software de virtualiz
 
 1. **Máquina Virtual 1: Servidor Proxy Inverso y Balanceador de Carga**
 
-    - **Sistema Operativo:** Ubuntu Server 24.04.
+    Crear una máquina virtual en VirtualBox con la siguiente configuración:
 
-    - **Interfaces de Red:**
+    - **Nombre e imagen a utilizar:**
+        - **Nombre:** Lab3.1-Proxy
+        - **Imagen ISO:** ubuntu-24.04.3-live-server-amd64.iso
 
-        - `enp0s3` (NAT): Permite el acceso a internet. Configura un reenvío de puertos (por ejemplo, del puerto 2222 del host al puerto 22 de la MV) para acceso SSH.
+    - **Hardware:**
+        - **Memoria base:** 2048 MB
+        - **Procesadores:** 1 CPU
 
-        - `enp0s8` (Red Interna): Se conectará a los servidores web del backend.
+    - **Disco duro:**
+        - **Capacidad:** 10,00 GB 
 
-            - **Configuración de la red:**
-
-                - IP: `192.168.10.1`
-
-                - Máscara de subred: `255.255.255.248` (equivalente a `/29`).
+    - **Red:** Configuración de Red:
+        - **Adaptador 1:** Habilitar adaptador de red:
+            - **Conectado a:** NAT (Para acceder Internet)
+        - **Adaptador 2:** Habilitar adaptador de red:
+            - **Conectado a:** Red Interna (Para conectarse a los servidores Web Backend y compartir Internet con ellos)
+            - **Nombre:** Lab3.1-SW (Acturará como Switch dentro de la Red Interna)
 
 2. **Máquina Virtual 2: Servidor Web 1**
 
-    - **Sistema Operativo:** Alpine Linux ([descargar aquí](https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-standard-3.22.1-x86_64.iso)).
+    Crear una máquina virtual en VirtualBox con la siguiente configuración:
 
-    - **Interfaces de Red:**
+    - **Nombre e imagen a utilizar:**
+        - **Nombre:** Lab3.1-WebServer1
+        - **Imagen ISO:** alpine-standard-3.22.1-x86_64.iso ([Alpine Linux](https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-standard-3.22.1-x86_64.iso))
+        - **Tipo:** Linux
+        - **Subtipo:** Other Linux
+        - **Versión:** Other Linux (64-bit)
 
-        - `eth0` (Red Interna): Se conectará a la red interna del proxy.
+    - **Hardware:**
+        - **Memoria base:** 1024 MB
+        - **Procesadores:** 1 CPU
 
-            - **Configuración de la red:**
+    - **Disco duro:**
+        - **Capacidad:** 6,00 GB 
 
-                - IP: `192.168.10.2`
+    - **Red:** Configuración de Red:
+        - **Adaptador 1:** Habilitar adaptador de red:
+            - **Conectado a:** NAT (Inicialmente para acceder Internet. Una vez instalado, se debe modificar a "Red Interna" para conectar a la red interna).
 
-                - Máscara de subred: `255.255.255.248`
-
-                - Gateway: `192.168.10.1`
+        - **Reenvío de puertos:** Añadir las siguientes reglas de reenvío:
+        
+            | Nombre | Protocolo | IP anfitrión | Puerto anfitrión | IP invitado | Puerto invitado |
+            | - | - | - | - | - | - |
+            | SSH | TCP |   | 2222 | 10.0.2.15 | 22 |
+            | HTTP | TCP |   | 8080 | 10.0.2.15 | 80 |
 
 3. **Máquina Virtual 3: Servidor Web 2**
 
-    - **Sistema Operativo:** Alpine Linux ([descargar aquí](https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-standard-3.22.1-x86_64.iso)).
+   Crear una máquina virtual en VirtualBox con la siguiente configuración:
 
-    - **Interfaces de Red:**
+    - **Nombre e imagen a utilizar:**
+        - **Nombre:** Lab3.1-WebServer2
+        - **Imagen ISO:** alpine-standard-3.22.1-x86_64.iso ([Alpine Linux](https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-standard-3.22.1-x86_64.iso))
+        - **Tipo:** Linux
+        - **Subtipo:** Other Linux
+        - **Versión:** Other Linux (64-bit)
 
-        - `eth0` (Red Interna): Conectada a la misma red interna que los otros servidores.
+    - **Hardware:**
+        - **Memoria base:** 1024 MB
+        - **Procesadores:** 1 CPU
 
-            - **Configuración de la red:**
+    - **Disco duro:**
+        - **Capacidad:** 6,00 GB 
 
-                - IP: `192.168.10.3`
-
-                - Máscara de subred: `255.255.255.248`
-
-                - Gateway: `192.168.10.1`
+    - **Red:** Configuración de Red:
+        - **Adaptador 1:** Habilitar adaptador de red:
+            - **Conectado a:** NAT (Temporal, solo para descargar paquetes necesarios para instalar el SO. Una vez instalado, se debe modificar a "Red Interna").
 
 ## 💻 Sección 2: Práctica guiada
+
+### Paso 1: Instalación y configuración de red de Ubuntu Server 24.04 (Servidor Proxy y Balanceador de Carga)
+
+Seguir los pasos realizados en anteriores laboratorios a diferencia de la configuración de red, `Network configuration`, donde debes:
+
+1. Dejar tal cual la configuración de la interfaz de red `enp0s3` con `DHCP`, es muy probable que la IP asignada sea la `10.0.2.15/24`.
+
+2. Configurar la interfaz `enp0s8` con `IPv4`:
+    - Método de IPv4: Manual
+    - Subred: 192.168.10.0/29
+    - Dirección: 192.168.10.1
+    - Puerta de enlace: (vacío)
+    - Servidores de nombres: (vacío)
+    - Dominios de búsqueda: (vacío)
+
+### Paso 2: Instalación y configuración de red de Alpine Linux (Servidor Web 1)
+
+Iniciar la máquina virtual y seguir los siguientes pasos:
+1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
+    ```
+    localhost login: root (↵, presiona tecla "Enter")
+    ```
+2. Ejecutar el instalador de Alpine Linux:
+    ```
+    localhost:~# setup-alpine ⮐
+    ```
+3. Seleccione la disposición del teclado:
+    ```
+    Select keyboard layout: [none] us (Enter)
+    ```
+
+4. Seleccione la variante del teclado:
+    Select variant (or 'abort'): us (Enter)
+- Introduzca el hostname de la máquina virtual:
+    Hostname
+    --------
+    Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] webserver1 (Enter)
+- Seleccione la interfaz que tendrá que configurar:
+    Interface
+    ---------
+    .....
+    Which one do you want to initialize? (or '?' or 'done') [eth0] (Enter)
+    
+    IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] (Enter)
+
+    Do you want to do any manual network configuration? (y/n) [n] (Enter)
+
+
+### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
+
+
 
 ### Paso 1: Instalación y Configuración de Red durante la instalación del S.O.
 
