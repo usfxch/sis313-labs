@@ -211,20 +211,60 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     ...
     Enter ssh key or URL for marcelo (or 'none') [none] ⮐
     ...
-    Which ssh server? ('openssh', 'dropbear' or 'none') [openssh]
+    Which ssh server? ('openssh', 'dropbear' or 'none') [openssh] ⮐
     </pre>
-- Instalación en Disco duro:
+
+13. Instalación en Disco duro:
     <pre>
     Disk & Install
     --------------
     Which disk(s) would you like to use? (or '?' for help or 'none') [none] <strong>sda</strong> ⮐
-    .....
+    ...
     How would you like to use it? ('sys', 'data', 'crypt', 'lvm' or '?' for help) [?] <strong>sys</strong> ⮐
-    .....
+    ...
     WARNING: Erase the above disk(s) and continue? (y/n) [n] <strong>y</strong> ⮐
-    .....
+    ...
     Installation is complete. Please reboot.
     webserver1:~# <strong>poweroff</strong> ⮐
+    </pre>
+
+14. Una vez apagada la máquina virtual, la seleccionamos y hacemos clic en `Configuración`, luego en `Almacenamiento`, desmontamos del `IDE Secundario` (CD/DVD) la imagen del ISO de `Alpine Linux` y guardamos la configuración.
+
+15. Iniciamos nuevamente la máquina virtual, iniciamos sesión como `root` e instalamos el paquetes `nano`:
+    <pre>
+    webserver1:~# <strong>apk add nano</strong> ⮐
+    </pre>
+
+    Apagamos la máquina virtual:
+    <pre>
+    webserver1:~# <strong>poweroff</strong> ⮐
+    </pre>
+
+17. Configuramos la máquina virtual para cambiar el `Adaptador 1` de Red a:
+    - Conectado a: `Red Interna`
+    - Nombre: `Lab3.1-SW`
+
+18. Iniciamos nuevamente la máquina virtual, accedemos como `root` y configuramos nuevamente la interfaz de red:
+    <pre>
+    webserver1:~# <strong>nano /etc/network/interfaces</strong> ⮐
+    </pre>
+    
+    ```
+    auto eth0
+    iface eth0 inet static
+        address 192.168.10.2
+        netmask 255.255.255.248
+        gateway 192.168.10.1
+    ```
+
+    Reiniciamos el servicio de red:
+    <pre>
+    webserver1:~# <strong>/etc/init.d/networking restart</strong>
+    </pre>
+
+    Probamos la conexión con el `gateway` haciendo `ping`.
+    <pre>
+    webserver1:~# <strong>ping 192.168.10.1</strong>
     </pre>
 
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
