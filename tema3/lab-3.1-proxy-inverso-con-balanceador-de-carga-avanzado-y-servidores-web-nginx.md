@@ -121,7 +121,8 @@ Seguir los pasos realizados en anteriores laboratorios a diferencia de la config
 Iniciar la máquina virtual y seguir los siguientes pasos:
 1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
     ```
-    localhost login: root (⮐, presiona tecla "Enter")
+    ...
+    localhost login: root ⮐
     ```
 2. Ejecutar el instalador de Alpine Linux:
     ```
@@ -129,25 +130,30 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     ```
 3. Seleccione la disposición del teclado:
     ```
-    Select keyboard layout: [none] us (Enter)
+    Select keyboard layout: [none] us ⮐ 
     ```
 
 4. Seleccione la variante del teclado:
-    Select variant (or 'abort'): us (Enter)
-- Introduzca el hostname de la máquina virtual:
+    ```
+    Select variant (or 'abort'): us ⮐
+    ```
+5. Introduzca el hostname de la máquina virtual:
+    ```
     Hostname
     --------
-    Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] webserver1 (Enter)
-- Seleccione la interfaz que tendrá que configurar:
+    Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] webserver1 ⮐
+    ```
+6. Seleccione la interfaz que tendrá que configurar:
+    ```
     Interface
     ---------
     .....
-    Which one do you want to initialize? (or '?' or 'done') [eth0] (Enter)
+    Which one do you want to initialize? (or '?' or 'done') [eth0] ⮐
     
-    IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] (Enter)
+    IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] ⮐ 
 
-    Do you want to do any manual network configuration? (y/n) [n] (Enter)
-
+    Do you want to do any manual network configuration? (y/n) [n] ⮐ 
+    ```
 
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
 
