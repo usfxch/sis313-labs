@@ -121,7 +121,7 @@ Seguir los pasos realizados en anteriores laboratorios a diferencia de la config
 Iniciar la máquina virtual y seguir los siguientes pasos:
 1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
     ```
-    localhost login: root (↵, presiona tecla "Enter")
+    localhost login: root (⮐, presiona tecla "Enter")
     ```
 2. Ejecutar el instalador de Alpine Linux:
     ```
