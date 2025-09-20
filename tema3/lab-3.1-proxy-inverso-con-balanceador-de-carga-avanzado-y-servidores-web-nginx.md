@@ -120,72 +120,112 @@ Seguir los pasos realizados en anteriores laboratorios a diferencia de la config
 
 Iniciar la máquina virtual y seguir los siguientes pasos:
 1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
-    ```
+    <pre>
     ...
-    localhost login: root ⮐
-    ```
+    localhost login: <strong>root</strong> ⮐
+    </pre>
+
 2. Ejecutar el instalador de Alpine Linux:
-    ```
-    localhost:~# setup-alpine ⮐
-    ```
+    <pre>
+    localhost:~# <strong>setup-alpine</strong> ⮐
+    </pre>
+
 3. Seleccione la disposición del teclado:
-    ```
-    Select keyboard layout: [none] us ⮐ 
-    ```
+    <pre>
+    Select keyboard layout: [none] <strong>us</strong> ⮐ 
+    </pre>
 
 4. Seleccione la variante del teclado:
-    ```
-    Select variant (or 'abort'): us ⮐
-    ```
+    <pre>
+    Select variant (or 'abort'): <strong>us</strong> ⮐
+    </pre>
+
 5. Introduzca el hostname de la máquina virtual:
-    ```
+    <pre>
     Hostname
     --------
-    Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] webserver1 ⮐
-    ```
+    Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] <strong>webserver1</strong> ⮐
+    </pre>
+
 6. Seleccione la interfaz que tendrá que configurar:
-    ```
+    <pre>
     Interface
     ---------
-    
+    ...
     Which one do you want to initialize? (or '?' or 'done') [eth0] ⮐
     
     IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] ⮐ 
 
     Do you want to do any manual network configuration? (y/n) [n] ⮐ 
-    ```
+    </pre>
 
 7. Introduce la contraseña del usuario root:
-    ```
+    <pre>
     Root password
     -------------
-    New password: ****** ⮐
-    Retype password: ****** ⮐
-    ```
+    New password: <strong>******</strong> ⮐
+    Retype password: <strong>******</strong> ⮐
+    </pre>
 
 8. Selecciona la zona horaria:
-    ```
-    Timezone
-    --------
-    .....
-    Which timezone are you in? (or '?' or 'none') [UTC] America/La_Paz ⮐
-    ```
-
     <pre>
     Timezone
     --------
-    .....
+    ...
     Which timezone are you in? (or '?' or 'none') [UTC] <strong>America/La_Paz</strong> ⮐
-</pre>
-- Configuración del Proxy (Internet):
+    </pre>
+
+9. Configuración del Proxy (Internet):
+    <pre>
     Proxy
     -----
-    HTTP/FTP proxy URL? (e.g. 'http://proxy:8080', or 'none') [none] (Enter)
-- Configuración del servidor NTP:
+    HTTP/FTP proxy URL? (e.g. 'http://proxy:8080', or 'none') [none] ⮐
+    </pre>
+
+10. Configuración del servidor NTP:
+    <pre>
     Network Time Protocol
     ---------------------
+    ...
+    Which NTP client to run? ('busybox', 'openntp', 'chrony' or 'none') [busybox] ⮐
+    </pre>
+
+11. Configuración de los repositorios de paquetes de Alpine Linux:
+    <pre>
+    APK Mirror
+    ----------
+    ...
+    Enter mirror number or URL: [1] ⮐
+    </pre>
+
+12. Configuración del usuario alternativo a root:
+    <pre>
+     User 
+    ------
+    Setup a user? (enter a lower-case loginname, or 'no') [no] <strong>marcelo</strong> ⮐
+    ...
+    Full name for user marcelo [marcelo] <strong>Marcelo Quispe Ortega</strong> ⮐
+    ...
+    New password: <strong>******</strong> ⮐
+    Retype password: <strong>******</strong> ⮐
+    ...
+    Enter ssh key or URL for marcelo (or 'none') [none] ⮐
+    ...
+    Which ssh server? ('openssh', 'dropbear' or 'none') [openssh]
+    </pre>
+- Instalación en Disco duro:
+    <pre>
+    Disk & Install
+    --------------
+    Which disk(s) would you like to use? (or '?' for help or 'none') [none] <strong>sda</strong> ⮐
     .....
-    Which NTP client to run? ('busybox', 'openntp', 'chrony' or 'none') [busybox] (Enter)
+    How would you like to use it? ('sys', 'data', 'crypt', 'lvm' or '?' for help) [?] <strong>sys</strong> ⮐
+    .....
+    WARNING: Erase the above disk(s) and continue? (y/n) [n] <strong>y</strong> ⮐
+    .....
+    Installation is complete. Please reboot.
+    webserver1:~# <strong>poweroff</strong> ⮐
+    </pre>
 
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
 
