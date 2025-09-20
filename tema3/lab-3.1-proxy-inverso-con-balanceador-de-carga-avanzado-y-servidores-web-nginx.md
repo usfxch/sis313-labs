@@ -123,29 +123,29 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     <pre>
     ...
     localhost login: <strong>root</strong> ⮐
-    </pre>
+</pre>
 
 2. Ejecutar el instalador de Alpine Linux:
     <pre>
     localhost:~# <strong>setup-alpine</strong> ⮐
-    </pre>
+</pre>
 
 3. Seleccione la disposición del teclado:
     <pre>
     Select keyboard layout: [none] <strong>us</strong> ⮐ 
-    </pre>
+</pre>
 
 4. Seleccione la variante del teclado:
     <pre>
     Select variant (or 'abort'): <strong>us</strong> ⮐
-    </pre>
+</pre>
 
 5. Introduzca el hostname de la máquina virtual:
     <pre>
     Hostname
     --------
     Enter system hostname (fully qualified form, e.g. 'foo.example.org') [localhost] <strong>webserver1</strong> ⮐
-    </pre>
+</pre>
 
 6. Seleccione la interfaz que tendrá que configurar:
     <pre>
@@ -157,7 +157,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     IP address for eth0? (or 'dhcp', 'none' ?) [dhcp] ⮐ 
 
     Do you want to do any manual network configuration? (y/n) [n] ⮐ 
-    </pre>
+</pre>
 
 7. Introduce la contraseña del usuario root:
     <pre>
@@ -165,7 +165,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     -------------
     New password: <strong>******</strong> ⮐
     Retype password: <strong>******</strong> ⮐
-    </pre>
+</pre>
 
 8. Selecciona la zona horaria:
     <pre>
@@ -173,14 +173,14 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
     --------
     ...
     Which timezone are you in? (or '?' or 'none') [UTC] <strong>America/La_Paz</strong> ⮐
-    </pre>
+</pre>
 
 9. Configuración del Proxy (Internet):
     <pre>
     Proxy
     -----
     HTTP/FTP proxy URL? (e.g. 'http://proxy:8080', or 'none') [none] ⮐
-    </pre>
+</pre>
 
 10. Configuración del servidor NTP:
     <pre>
