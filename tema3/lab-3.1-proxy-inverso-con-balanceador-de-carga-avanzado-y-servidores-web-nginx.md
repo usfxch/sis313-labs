@@ -325,9 +325,18 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 - **Define el bloque** `upstream` **con los servidores backend.**
 
     ```nginx
-    upstream backend_servers {
-        server 10.0.0.2;
-        server 10.0.0.3;
+    upstream backend {
+        server 192.168.10.2;
+        server 192.168.10.3;
+    }
+
+    server {
+        listen 80;
+        server_name _;
+
+        location / {
+            proxy_pass http://backend;
+        }
     }
     ```
 
