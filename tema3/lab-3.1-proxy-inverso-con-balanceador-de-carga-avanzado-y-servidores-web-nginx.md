@@ -326,6 +326,7 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 
     ```nginx
     upstream backend {
+        # ip_hash; o least_conn;
         server 192.168.10.2;
         server 192.168.10.3;
     }
