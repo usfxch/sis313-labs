@@ -118,7 +118,7 @@ Seguir los pasos realizados en anteriores laboratorios a diferencia de la config
 
 ### Paso 2: Instalación y configuración de red de Alpine Linux (Servidor Web 1)
 
-Iniciar la máquina virtual y seguir los siguientes pasos:
+Iniciar la máquina virtual y realizar las siguientes tareas:
 1. Una vez iniciado el S.O., debes iniciar sesión con usuario root:
     <pre>
     (...)
@@ -269,6 +269,7 @@ Iniciar la máquina virtual y seguir los siguientes pasos:
 
 ### Paso 3: Instalación y configuración de red de Alpine Linux (Servidor Web 2)
 
+Realizar las mismas tareas en el Paso 2.
 
 ### Paso 4: Compartir Acceso a Internet desde el Proxy
 
@@ -306,17 +307,228 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
         sudo netfilter-persistent save
         ```
 
+- **En los servidores Web 1 y Web 2:**
+    - Configurar el servidor DNS para la resolución de dominios y salir a Internet.
+
+        ```bash
+        nano /etc/resolv.conf
+        ```
+
+        Modificar el contenido del archivo a:
+
+        ```bash
+        nameserver 8.8.8.8
+        ```
+
 ### Paso 5: Configuración de los servidores web backend
 
 - **Verifica la conexión a internet:** Desde los servidores Alpine, haz un `ping google.com` para confirmar que tienen acceso a internet.
 
-- **Instala NGINX y el entorno de ejecución:**
+- **Instala `nginx` y configura como servicio:**
 
-    - Para PHP: Instala `nginx` y `php-fpm`.
+    - Instala el paquete de `nginx`:
 
-    - Para Node.js: Instala Node.js y configura NGINX para que sirva el `index.js`.
+        ```bash
+        apk add nginx
+        ```
 
-- **Configura NGINX como proxy inverso local:** En cada servidor Alpine, configura NGINX para que reenvíe las peticiones a un proceso local de PHP-FPM o Node.js. Crea un archivo `index.php` o `index.js` que muestre un mensaje de "Hola Mundo" e indique el nombre del servidor (ej. "¡Hola Mundo desde el Servidor 1!").
+    - Configura el servicio para inicializarlo desde el arranque del sistema:
+
+        ```bash
+        rc-update add nginx default
+        ```
+
+    - Inicializa el servicio:
+
+        ```bash
+        rc-service nginx start 
+        # Puedes utilizar también `/etc/init.d/nginx start`
+        ```
+
+    - Por último, verifica si el servicio está funcionando:
+
+        ```bash
+        rc-service nginx status 
+        # Puedes utilizar también `/etc/init.d/nginx status`
+        ```
+
+- **OPCIÓN 1: Instala `php-fpm` y configura `nginx` como proxy inverso:**
+
+    - Habilita los repositorios de la Comunidad de Alpine Linux
+
+        ```bash
+        nano /etc/apk/repositories
+        ```
+
+    - Descomentar el repositorio de la Comunidad:
+
+        ```bash
+        http://dl-cdn.alpinelinux.org/alpine/v3.22/main
+        http://dl-cdn.alpinelinux.org/alpine/v3.22/community
+        ```
+
+    - Actualiza los repositorios:
+
+        ```bash
+        apk update
+        ```
+
+    - Instala los paquete `PHP-FPM`:
+
+        ```bash
+        apk add php php-fpm
+        ```
+
+    - Verifica la versión de PHP que se instalo:
+        ```bash
+        php -v
+        ```
+
+    - Habilita el servicio de `php-fpm` desde el inicio:
+        ```bash
+        rc-update add php-fpm83
+        ```
+    
+    - Inicia el servicio de `php-fpm`:
+        ```bash
+        rc-service php-fpm83 start
+        ```
+
+    - Habilita el virtual host para de `nginx` con `php-fpm`:
+
+        Configura el virtual host principal del servidor Web, para que `nginx` funcione como proxy inverso con `php-fpm`:
+
+        ```bash
+        nano /etc/nginx/http.d/default.conf
+        ```
+
+        ```nginx
+        server {
+            listen 80;
+            server_name _;
+            root /var/www/localhost/htdocs;
+
+            location / {
+                index index.php index.html index.htm;
+                try_files $uri $uri/ =404;
+            }
+
+            location ~ \.php$ {
+                include fastcgi_params;
+                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+        ```
+
+        Configura la página de bienvenida del php-fpm:
+
+        ```bash
+        nano /var/www/localhost/htdocs/index.php
+        ```
+
+        ```php
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)</title>
+        </head>
+        <body>
+            <h1>¡Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)!</h1>
+        </body>
+        </html>
+        ```
+
+        Reinicia el servicio de `php-fpm`:
+
+        ```bash
+        /etc/init.d/php-fpm83 restart
+        ```
+
+        Reinicia el servicio de `nginx`:
+
+        ```bash
+        /etc/init.d/nginx restart
+        ```
+
+    - Prueba si el WebServer 1 ya responde solicitudes:
+
+        Instala CURL para probar si funciona:
+        ```bash
+        apk add curl
+        ```
+
+        Ejecuta una petición al servidor Web:
+        ```bash
+        curl http://localhost
+        ```
+
+        Tu respuesta deberá ser la siguiente:
+        ```
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Hola Mundo desde el servidor webserver1 (127.0.0.1)</title>
+        </head>
+        <body>
+            <h1>¡Hola Mundo desde el servidor webserver1 (127.0.0.1)!</h1>
+        </body>
+        </html>
+        ```
+
+    - Repite los mismos pasos con el otro servidor (webserver2).
+
+    - Después de configurar ambos servidores (webserver1 y webserver2) debes configurar el servidor proxy como Proxy Inverso:
+
+        Edita el archivo principal:
+
+        ```bash
+        sudo nano /etc/nginx/sites-enabled/default
+        ```
+
+        Borra todo el contenido y añade el siguiente:
+
+        ```nginx
+        upstream balanceador {
+            server 192.168.10.2:80;
+            server 192.168.10.3:80;
+        }
+
+        server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+
+            server_name _;
+
+            location / {
+                proxy_pass http://balanceador;
+
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+        ```
+
+        Reinicia el servicio de `nginx`:
+        ```bash
+        sudo systemctl restart nginx
+        ```
+
+- **OPCIÓN 2: Instala `nginx` y configura `nginx` como Proxy Inverso:**
+
+    - **Instala Node.js y configura NGINX para que sirva el `index.js`:** En cada servidor Alpine, configura NGINX para que reenvíe las peticiones a un proceso local de Node.js. Crea un archivo `index.js` que muestre un mensaje de "Hola Mundo" e indique el nombre del servidor e IP (ej. "¡Hola Mundo desde el webserver1 (192.168.10.2)!").
 
 ### Paso 6: Configuración del balanceador de carga en el proxy (Ubuntu)
 
