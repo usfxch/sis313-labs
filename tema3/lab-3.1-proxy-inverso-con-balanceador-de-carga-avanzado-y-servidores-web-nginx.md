@@ -433,7 +433,7 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
             nano /var/www/localhost/htdocs/index.php
             ```
 
-            ```php,html
+            ```php
             <!DOCTYPE html>
             <html lang="en">
             <head>
