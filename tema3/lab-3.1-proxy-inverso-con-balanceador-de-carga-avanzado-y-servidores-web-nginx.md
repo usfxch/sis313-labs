@@ -354,47 +354,47 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 
 - **OPCIÓN 1: Instala `php-fpm` y configura `nginx` como proxy inverso:**
 
-    - Habilita los repositorios de la Comunidad de Alpine Linux.
+    1. Habilita los repositorios de la Comunidad de Alpine Linux.
 
         ```bash
         nano /etc/apk/repositories
         ```
 
-    - Descomentar el repositorio de la Comunidad, debe verse de la siguiente manera:
+    2. Descomentar el repositorio de la Comunidad, debe verse de la siguiente manera:
 
         ```bash
         http://dl-cdn.alpinelinux.org/alpine/v3.22/main
         http://dl-cdn.alpinelinux.org/alpine/v3.22/community
         ```
 
-    - Actualiza la lista de los repositorios:
+    3. Actualiza la lista de los repositorios:
 
         ```bash
         apk update
         ```
 
-    - Instala los paquete `php-fpm`:
+    4. Instala los paquete `php-fpm`:
 
         ```bash
         apk add php php-fpm
         ```
 
-    - Verifica la versión de PHP que se instaló:
+    5. Verifica la versión de PHP que se instaló:
         ```bash
         php -v
         ```
 
-    - Habilita el servicio de `php-fpm` desde el arranque del sistema:
+    6. Habilita el servicio de `php-fpm` desde el arranque del sistema:
         ```bash
         rc-update add php-fpm83
         ```
     
-    - Inicia el servicio de `php-fpm`:
+    7. Inicia el servicio de `php-fpm`:
         ```bash
         rc-service php-fpm83 start
         ```
 
-    - Habilita el virtual host de `nginx` con `php-fpm`:
+    8. Habilita el virtual host de `nginx` con `php-fpm`:
 
         - Configura el virtual host principal del servidor Web, para que `nginx` funcione como proxy inverso con `php-fpm`:
 
@@ -459,36 +459,36 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
             /etc/init.d/nginx restart
             ```
 
-    - Prueba si el WebServer 1 ya responde solicitudes:
+    9. Prueba si el `webserver1` ya responde solicitudes:
 
-        Instala CURL para probar si funciona:
-        ```bash
-        apk add curl
-        ```
+        - Instala CURL para probar si funciona:
+            ```bash
+            apk add curl
+            ```
 
-        Ejecuta una petición al servidor Web:
-        ```bash
-        curl http://localhost
-        ```
+        - Ejecuta una petición al servidor Web:
+            ```bash
+            curl http://localhost
+            ```
 
-        Tu respuesta deberá ser la siguiente:
-        ```
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Hola Mundo desde el servidor webserver1 (127.0.0.1)</title>
-        </head>
-        <body>
-            <h1>¡Hola Mundo desde el servidor webserver1 (127.0.0.1)!</h1>
-        </body>
-        </html>
-        ```
+        - Tu respuesta deberá ser la siguiente:
+            ```
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Hola Mundo desde el servidor webserver1 (127.0.0.1)</title>
+            </head>
+            <body>
+                <h1>¡Hola Mundo desde el servidor webserver1 (127.0.0.1)!</h1>
+            </body>
+            </html>
+            ```
 
-    - Repite los mismos pasos con el otro servidor (webserver2).
+        **Repite los mismos pasos (del 1 al 9) con el otro servidor (webserver2).**
 
-    - Después de configurar ambos servidores (webserver1 y webserver2) debes configurar el servidor proxy como Proxy Inverso:
+    10. Después de configurar ambos servidores (webserver1 y webserver2) debes configurar el servidor proxy como Proxy Inverso:
 
         Edita el archivo principal:
 
