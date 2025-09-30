@@ -342,49 +342,49 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
 
         ```bash
         rc-service nginx start 
-        # Puedes utilizar también `/etc/init.d/nginx start`
+        # Puedes utilizar también: /etc/init.d/nginx start
         ```
 
     - Por último, verifica si el servicio está funcionando:
 
         ```bash
         rc-service nginx status 
-        # Puedes utilizar también `/etc/init.d/nginx status`
+        # Puedes utilizar también: /etc/init.d/nginx status
         ```
 
 - **OPCIÓN 1: Instala `php-fpm` y configura `nginx` como proxy inverso:**
 
-    - Habilita los repositorios de la Comunidad de Alpine Linux
+    - Habilita los repositorios de la Comunidad de Alpine Linux.
 
         ```bash
         nano /etc/apk/repositories
         ```
 
-    - Descomentar el repositorio de la Comunidad:
+    - Descomentar el repositorio de la Comunidad, debe verse de la siguiente manera:
 
         ```bash
         http://dl-cdn.alpinelinux.org/alpine/v3.22/main
         http://dl-cdn.alpinelinux.org/alpine/v3.22/community
         ```
 
-    - Actualiza los repositorios:
+    - Actualiza la lista de los repositorios:
 
         ```bash
         apk update
         ```
 
-    - Instala los paquete `PHP-FPM`:
+    - Instala los paquete `php-fpm`:
 
         ```bash
         apk add php php-fpm
         ```
 
-    - Verifica la versión de PHP que se instalo:
+    - Verifica la versión de PHP que se instaló:
         ```bash
         php -v
         ```
 
-    - Habilita el servicio de `php-fpm` desde el inicio:
+    - Habilita el servicio de `php-fpm` desde el arranque del sistema:
         ```bash
         rc-update add php-fpm83
         ```
@@ -394,70 +394,70 @@ Para que los servidores backend puedan descargar e instalar paquetes, el servido
         rc-service php-fpm83 start
         ```
 
-    - Habilita el virtual host para de `nginx` con `php-fpm`:
+    - Habilita el virtual host de `nginx` con `php-fpm`:
 
-        Configura el virtual host principal del servidor Web, para que `nginx` funcione como proxy inverso con `php-fpm`:
+        - Configura el virtual host principal del servidor Web, para que `nginx` funcione como proxy inverso con `php-fpm`:
 
-        ```bash
-        nano /etc/nginx/http.d/default.conf
-        ```
+            ```bash
+            nano /etc/nginx/http.d/default.conf
+            ```
 
-        ```nginx
-        server {
-            listen 80;
-            server_name _;
-            root /var/www/localhost/htdocs;
+            ```nginx
+            server {
+                listen 80;
+                server_name _;
+                root /var/www/localhost/htdocs;
 
-            location / {
-                index index.php index.html index.htm;
-                try_files $uri $uri/ =404;
+                location / {
+                    index index.php index.html index.htm;
+                    try_files $uri $uri/ =404;
+                }
+
+                location ~ \.php$ {
+                    include fastcgi_params;
+                    fastcgi_pass 127.0.0.1:9000;
+                    fastcgi_index index.php;
+                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                }
             }
+            ```
 
-            location ~ \.php$ {
-                include fastcgi_params;
-                fastcgi_pass 127.0.0.1:9000;
-                fastcgi_index index.php;
-                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        - Configura la página de bienvenida del `php-fpm`:
 
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-            }
-        }
-        ```
+            ```bash
+            nano /var/www/localhost/htdocs/index.php
+            ```
 
-        Configura la página de bienvenida del php-fpm:
+            ```php,html
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)</title>
+            </head>
+            <body>
+                <h1>¡Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)!</h1>
+            </body>
+            </html>
+            ```
 
-        ```bash
-        nano /var/www/localhost/htdocs/index.php
-        ```
+        - Reinicia el servicio de `php-fpm`:
 
-        ```php
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)</title>
-        </head>
-        <body>
-            <h1>¡Hola Mundo desde el servidor <?=gethostname() ?> (<?=$_SERVER['SERVER_ADDR'] ?>)!</h1>
-        </body>
-        </html>
-        ```
+            ```bash
+            /etc/init.d/php-fpm83 restart
+            ```
 
-        Reinicia el servicio de `php-fpm`:
+        - Reinicia el servicio de `nginx`:
 
-        ```bash
-        /etc/init.d/php-fpm83 restart
-        ```
-
-        Reinicia el servicio de `nginx`:
-
-        ```bash
-        /etc/init.d/nginx restart
-        ```
+            ```bash
+            /etc/init.d/nginx restart
+            ```
 
     - Prueba si el WebServer 1 ya responde solicitudes:
 
