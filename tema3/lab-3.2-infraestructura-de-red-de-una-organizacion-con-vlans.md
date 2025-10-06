@@ -171,14 +171,35 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
     - Instala la herramienta `vlan`:
 
         ```bash
-        sudo apk add vlan.
+        apk add vlan
         ```
 
     - Configura la interfaz de red con la VLAN 30.
 
-    - Asigna la IP estática `192.168.30.2` con la máscara `/27`.
+        ```bash
+        nano /etc/network/interfaces
+        ```
 
-    - Configura el gateway a la IP del router: `192.168.30.1`.
+        ```nano
+        auto lo
+            iface lo inet loopback
+
+        auto eth0.30
+        iface eth0.30 inet static
+            address 192.168.30.2
+            netmask 255.255.255.224
+            gateway 192.168.30.1
+            vlan-id 30
+
+        auto eth0
+        iface eth0 inet manual
+            up ip link set $IFACE up
+            down ip link set $IFACE down
+        ```
+
+        > Asigna la IP estática `192.168.30.2` con la máscara `/27`.
+
+        > Configura el gateway a la IP del router: `192.168.30.1`.
 
     - **Prueba:** Verifica la conexión con el router (`ping 192.168.30.1`) pero confirma que **no tiene acceso a internet**.
 
