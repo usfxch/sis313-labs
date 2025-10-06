@@ -58,25 +58,69 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
     - Instala las herramientas necesarias para trabajar con VLANs:
 
         ```bash
-        sudo apt install vlan.
+        sudo apt install vlan
         ```
 
     - Carga el módulo del kernel para VLANs: 
 
         ```bash
-        sudo modprobe 8021q.
+        sudo modprobe 8021q
         ```
 
     - Configura las interfaces de red VLAN. Para el enrutamiento inter-VLAN, cada sub-interfaz tendrá un gateway que será su propia dirección IP.
 
-    - Edita el archivo de configuración de red para crear las sub-interfaces virtuales (ej. `enp0s8.10`, `enp0s8.20`, etc.) y asignarles las IPs estáticas de cada VLAN.
+    - Edita el archivo de configuración de red para crear las sub-interfaces virtuales (ej. `vlan10`, `vlan20`, etc.) y asignarles las IPs estáticas de cada VLAN.
+
+        ```bash
+        nano /etc/netplan/50-cloud-init.yaml
+        ```
+
+        ```bash
+        network:
+          version: 2
+          ethernets:
+            enp0s3:
+              dhcp4: true
+            enp0s8:
+              dhcp4: no
+              optional: true
+          vlans:
+            vlan10:
+              link: enp0s8
+              id: 10
+              addresses:
+                - 192.168.10.1/29
+              nameservers:
+                addresses: [8.8.8.8]
+            vlan20:
+              link: enp0s8
+              id: 20
+              addresses:
+                - 192.168.20.1/29
+              nameservers:
+                addresses: [8.8.8.8]
+            vlan30:
+              link: enp0s8
+              id: 30
+              addresses:
+                - 192.168.30.1/27
+              nameservers:
+                addresses: [8.8.8.8]
+            vlan40:
+              link: enp0s8
+              id: 40
+              addresses:
+                - 192.168.40.1/29
+              nameservers:
+                addresses: [8.8.8.8]
+        ```
 
 - **Enrutamiento y NAT:**
 
     - Habilita el reenvío de paquetes:
     
         ```bash
-        sudo sysctl -w net.ipv4.ip_forward=1.
+        sudo sysctl -w net.ipv4.ip_forward=1
         ```
 
     - Configura las reglas de `iptables` para permitir el acceso a internet para las VLANs que lo requieran (TI y Contabilidad).
@@ -88,14 +132,35 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
     - Instala la herramienta `vlan`:
     
         ```bash
-        sudo apk add vlan.
+        apk add vlan
         ```
 
     - Configura la interfaz de red con la VLAN 40.
 
-    - Asigna la IP estática `192.168.40.2` con la máscara `/29`.
+        ```bash
+        nano /etc/network/interfaces
+        ```
 
-    - Configura el gateway a la IP del router en esa VLAN: `192.168.40.1`.
+        ```nano
+        auto lo
+        iface lo inet loopback
+
+        auto eth0.40
+        iface eth0.40 inet static
+            address 192.168.40.2
+            netmask 255.255.255.248
+            gateway 192.168.40.1
+            vlan-id 40
+
+        auto eth0
+        iface eth0 inet manual
+            up ip link set $IFACE up
+            down ip link set $IFACE down
+        ```
+
+        > Asigna la IP estática `192.168.40.2` con la máscara `/29`.
+
+        > Configura el gateway a la IP del router en esa VLAN: `192.168.40.1`.
 
     - **Prueba:** Verifica la conexión con el router (`ping 192.168.40.1`) y el acceso a internet (`ping google.com`).
 
