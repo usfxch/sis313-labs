@@ -117,13 +117,22 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
 
 - **Enrutamiento y NAT:**
 
-    - Habilita el reenvío de paquetes:
-    
+    - Habilitar el reenvío de paquetes en el kernel
+
+        Edita el archivo `sysctl.conf`:
         ```bash
-        sudo sysctl -w net.ipv4.ip_forward=1
+        sudo nano /etc/sysctl.conf
+        ```
+    
+        Asegúrate de que esta línea esté presente y no comentada:
+        ```bash
+        net.ipv4.ip_forward=1
         ```
 
-    - Configura las reglas de `iptables` para permitir el acceso a internet para las VLANs que lo requieran (TI y Contabilidad).
+        Aplicar los cambios inmediatamente
+        ```bash
+        sudo sysctl -p
+        ```
 
 ### Paso 2: Configuración de la VM de Contabilidad
 
@@ -210,33 +219,60 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
     - Instala y habilita `ufw`: 
     
         ```bash
-        sudo apt install ufw && sudo ufw enable
+        sudo apt install ufw
+        ```
+
+    - Habilita `ssh` en `ufw`: 
+    
+        ```bash
+        sudo ufw allow ssh
+        ```
+
+    - Habilita `ufw` desde el arranque: 
+    
+        ```bash
+        sudo ufw enable
         ```
 
     - Configura las siguientes reglas para controlar el tráfico entre las VLANs. Es crucial establecer las reglas en el orden correcto.
 
         ```bash
         # Permiso para IT (VLAN 20) a todos
-        sudo ufw allow in on enp0s8.20
-        ```
-
-        ```bash
-        # Permiso para Contabilidad (VLAN 40) a DMZ y Ventas
-        sudo ufw allow in on enp0s8.40 to 192.168.10.0/29
-        sudo ufw allow in on enp0s8.40 to 192.168.30.0/27
+        sudo ufw route allow in on vlan20 out on vlan10
+        sudo ufw route allow in on vlan20 out on vlan30
+        sudo ufw route allow in on vlan20 out on vlan40
         ```
 
         ```bash
         # Permiso para Ventas (VLAN 30) a DMZ
-        sudo ufw allow in on enp0s8.30 to 192.168.10.0/29
+        sudo ufw route allow in on vlan30 out on vlan10
+        ```
+
+        ```bash
+        # Permiso para Contabilidad (VLAN 40) a DMZ y Ventas
+        sudo ufw route allow in on vlan40 out on vlan10
+        sudo ufw route allow in on vlan40 out on vlan30
         ```
 
         ```bash
         # Denegar acceso de DMZ (VLAN 10) a todos
-        sudo ufw deny in on enp0s8.10
+        sudo ufw route deny in on vlan10 out on vlan20
+        sudo ufw route deny in on vlan10 out on vlan30
+        sudo ufw route deny in on vlan10 out on vlan40
         ```
 
-    - **Pruebas:** Desde la VM de Ventas, haz `ping` a la IP de Contabilidad y a una IP de la DMZ para verificar el acceso.
+        ```bash
+        # Denegar acceso de Ventas (VLAN 30) a TI y Contabilidad
+        sudo ufw route deny in on vlan30 out on vlan20
+        sudo ufw route deny in on vlan30 out on vlan40
+        ```
+
+        ```bash
+        # Denegar acceso de Contabilidad (VLAN 40) a TI
+        sudo ufw route deny in on vlan40 out on vlan20
+        ```
+
+    - **Pruebas:** Desde la VM de Ventas, intenta conectar a la PC Contabilidad y a un Servidor de la DMZ para verificar el acceso.
 
 ## ⚙️ Sección 3: Práctica en Grupo
 
@@ -248,7 +284,7 @@ El objetivo es que el o los estudiantes completen la configuración de las **VLA
 
 - **VM de TI (VLAN 20)**: Debe estar configurada con su IP estática. Debe tener acceso a internet y a todas las otras VLANs (DMZ, Ventas y Contabilidad).
 
-Al final del ejercicio, el grupo deberá demostrar a través de pruebas de conectividad (ej. `ping`, `traceroute`, acceso a sitios web) que todas las políticas de acceso y denegación están funcionando correctamente.
+Al final del ejercicio, el grupo deberá demostrar a través de pruebas de acceso (ej. `ssh`) que todas las políticas de acceso y denegación están funcionando correctamente.
 
 ### ✅ Evaluación del Laboratorio
 
