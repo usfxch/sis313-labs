@@ -236,43 +236,58 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
 
     - Configura las siguientes reglas para controlar el tráfico entre las VLANs. Es crucial establecer las reglas en el orden correcto.
 
+        Permiso para TI (VLAN 20) a todos
         ```bash
-        # Permiso para IT (VLAN 20) a todos
         sudo ufw route allow in on vlan20 out on vlan10
         sudo ufw route allow in on vlan20 out on vlan30
         sudo ufw route allow in on vlan20 out on vlan40
         ```
 
+        Permiso para Ventas (VLAN 30) a DMZ
         ```bash
-        # Permiso para Ventas (VLAN 30) a DMZ
         sudo ufw route allow in on vlan30 out on vlan10
         ```
 
+        Permiso para Contabilidad (VLAN 40) a DMZ y Ventas
         ```bash
-        # Permiso para Contabilidad (VLAN 40) a DMZ y Ventas
         sudo ufw route allow in on vlan40 out on vlan10
         sudo ufw route allow in on vlan40 out on vlan30
         ```
 
+        Denegar acceso de DMZ (VLAN 10) a todos
         ```bash
-        # Denegar acceso de DMZ (VLAN 10) a todos
         sudo ufw route deny in on vlan10 out on vlan20
         sudo ufw route deny in on vlan10 out on vlan30
         sudo ufw route deny in on vlan10 out on vlan40
         ```
 
+        Denegar acceso de Ventas (VLAN 30) a TI y Contabilidad
         ```bash
-        # Denegar acceso de Ventas (VLAN 30) a TI y Contabilidad
         sudo ufw route deny in on vlan30 out on vlan20
         sudo ufw route deny in on vlan30 out on vlan40
         ```
 
+        Denegar acceso de Contabilidad (VLAN 40) a TI
         ```bash
-        # Denegar acceso de Contabilidad (VLAN 40) a TI
         sudo ufw route deny in on vlan40 out on vlan20
         ```
 
-    - **Pruebas:** Desde la VM de Ventas, intenta conectar a la PC Contabilidad y a un Servidor de la DMZ para verificar el acceso.
+    - Configura las siguientes reglas para el acceso a Internet desde TI y Contabilidad.
+
+        ```bash
+        sudo nano /etc/ufw/before.rules
+        ```
+
+        Añade al inicio del archivo la siguiente configuración, que son reglas de enmascaramiento para que las VLANs tengan acceso a Internet:
+        ```nano
+        *nat
+        :POSTROUTING ACCEPT [0:0]
+        -A POSTROUTING -s 192.168.20.0/24 -o enp0s3 -j MASQUERADE
+        -A POSTROUTING -s 192.168.40.0/24 -o enp0s3 -j MASQUERADE
+        COMMIT
+        ```
+
+    - **Pruebas:** Desde la VM de Ventas, intenta conectar por `ssh` a la PC Contabilidad y a un Servidor de la DMZ para verificar si tienes o no acceso.
 
 ## ⚙️ Sección 3: Práctica en Grupo
 
