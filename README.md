@@ -27,3 +27,8 @@
 - [Laboratorio 3.1: Proxy Inverso con Balanceador de Carga Avanzado y Servidores Web NGINX](tema3/lab-3.1-proxy-inverso-con-balanceador-de-carga-avanzado-y-servidores-web-nginx.md)
 
 - [Laboratorio 3.2: Infraestructura de Red de una Organización con VLANs](tema3/lab-3.2-infraestructura-de-red-de-una-organizacion-con-vlans.md)
+
+### Tema 4: Infraestructura de Networking
+
+- [Laboratorio 4.1: Plataforma HA, Balanceo de Carga y Monitoreo](tema4/lab-4.1-plataforma-ha-balanceo-de-carga-y-monitoreo.md)
+
