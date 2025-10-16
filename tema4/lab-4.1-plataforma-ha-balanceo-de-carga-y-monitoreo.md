@@ -239,40 +239,31 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     ```
 
     <pre>
-    Enter current password for root (enter for none): ⮐
-    </pre>
+    Enter current password for root (enter for none): ⮐</pre>
 
     <pre>
-    Switch to unix_socket authentication [Y/n] ⮐
-    </pre>
+    Switch to unix_socket authentication [Y/n] ⮐</pre>
 
     <pre>
-    Change the root password? [Y/n] ⮐
-    </pre>
+    Change the root password? [Y/n] ⮐</pre>
 
     <pre>
-    New password: (introduce tu contraseña) ⮐
-    </pre>
+    New password: (introduce tu contraseña) ⮐</pre>
 
     <pre>
-    Re-enter new password:: (vuelve a introducir tu contraseña) ⮐
-    </pre>
+    Re-enter new password:: (vuelve a introducir tu contraseña) ⮐</pre>
 
     <pre>
-    Remove anonymous users? [Y/n] ⮐
-    </pre>
+    Remove anonymous users? [Y/n] ⮐</pre>
 
     <pre>
-    Disallow root login remotely? [Y/n] ⮐
-    </pre>
+    Disallow root login remotely? [Y/n] ⮐</pre>
 
     <pre>
-    Remove test database and access to it? [Y/n] ⮐
-    </pre>
+    Remove test database and access to it? [Y/n] ⮐</pre>
 
     <pre>
-    Reload privilege tables now? [Y/n] ⮐
-    </pre>
+    Reload privilege tables now? [Y/n] ⮐</pre>
 
     Intenta conectarte al servidor de MariaDB para probar que todo esté correcto:
 
@@ -281,12 +272,10 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     ```
 
     <pre>
-    Enter password: (introduce tu contraseña) ⮐
-    </pre>
+    Enter password: (introduce tu contraseña) ⮐</pre>
 
     <pre>
-    MariaDB [(none)]> quit ⮐
-    </pre>
+    MariaDB [(none)]> quit ⮐</pre>
 
 4. **Configurar Acceso:**
 
