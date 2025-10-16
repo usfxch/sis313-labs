@@ -346,41 +346,42 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 ### Ejercicio 4: Lanzar Instancias con PM2 (VM Lab4.1-Apps)
 
-    - Dentro de cada App debes copiar el archivo `.env.example` a `.env`. Asegurate que el archivo de App 1 tenga el puerto `3001` y el de App 2 tenga el puerto `3002`.
+- Dentro de cada App debes copiar el archivo `.env.example` a `.env`. Asegurate que el archivo de App 1 tenga el puerto `3001` y el de App 2 tenga el puerto `3002`.
 
-    - Prueba si todo está correcto en ambas Apps utilizando el comando `node`:
+- Prueba si todo está correcto en ambas Apps utilizando el comando `node`:
 
-        ```bash
-        node app.js
-        ```
+    ```bash
+    node app.js
+    ```
 
-        El mensaje que debería salir en consola debe ser el siguiente:
-        <pre>
-        Servidor ejecutándose en el puerto 3001
-        Conexión a MariaDB exitosa. Pool creado y probado.
-        </pre>
+    El mensaje que debería salir en consola debe ser el siguiente:
 
-    - Lanzar App 1 en puerto 3001
+    <pre>
+    Servidor ejecutándose en el puerto 3001
+    Conexión a MariaDB exitosa. Pool creado y probado.
+    </pre>
 
-        ```bash
-        pm2 start app.js --name app1_3001
-        ```
+- Lanzar App 1 en puerto 3001
 
-    - Lanzar App 2 en puerto 3002
+    ```bash
+    pm2 start app.js --name app1_3001
+    ```
 
-        ```bash
-        pm2 start app.js --name app2_3002
-        ```
+- Lanzar App 2 en puerto 3002
 
-    - Configurar auto-arranque
+    ```bash
+    pm2 start app.js --name app2_3002
+    ```
 
-        ```bash
-        pm2 startup
-        ```
+- Configurar auto-arranque
 
-        ```bash
-        pm2 save
-        ```
+    ```bash
+    pm2 startup
+    ```
+
+    ```bash
+    pm2 save
+    ```
 
 ### Ejercicio 5: Servicios de Monitoreo (VM Lab4.1-Proxy)
 
