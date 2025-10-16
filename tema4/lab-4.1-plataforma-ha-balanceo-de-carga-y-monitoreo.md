@@ -358,8 +358,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
     <pre>
     Servidor ejecutándose en el puerto 3001
-    Conexión a MariaDB exitosa. Pool creado y probado.
-    </pre>
+    Conexión a MariaDB exitosa. Pool creado y probado.</pre>
 
 - Lanzar App 1 en puerto 3001
 
