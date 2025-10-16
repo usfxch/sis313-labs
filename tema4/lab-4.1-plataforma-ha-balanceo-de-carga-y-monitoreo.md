@@ -144,7 +144,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     ```
     > Donde `apps` es el nuevo `hostname` del VM.
 
-2. Instalar Node.js y PM2:
+2. Instalar Node.js (instrucciones de [Web oficial de Node.js] (https://nodejs.org/es/download)):
 
     - Descarga e instala `nvm`:
 
@@ -178,24 +178,57 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         ```
         > Debería mostrar por ejemplo: "10.9.3"
 
-3. **Clonar aplicación del repositorio git:**
+3. Instalar PM2 (instrucciones de [Web oficial de PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)):
 
-    ```bash
-    git clone ...
-    ```
+    - Instala el administrador de procesos `PM2` de forma global en tu sistema.
 
-4. **Lanzar Instancias con PM2:**
+        ```bash
+        npm install pm2@latest -g
+        ```
+    - Verifica la versión de PM2 instalada:
+
+        ```bash
+        pm2 --version
+        ```
+        > Debería mostrar por ejemplo: "6.0.13"
+
+4. **Clonar aplicación del repositorio git:**
+
+    - Crea una carpeta para organizar las Apps:
+
+        ```bash
+        mkdir apps
+        ```
+
+    - Clona el proyecto para la App 1:
+
+        ```bash
+        git clone https://github.com/marceloquispeortega/api-restful-crud-movies app1_3001
+        ```
+
+    - Clona el proyecto para la App 2:
+        ```bash
+        git clone https://github.com/marceloquispeortega/api-restful-crud-movies app2_3002
+        ```
+
+    - Ya dentro de cada una de las carpetas, instala las dependencias:
+
+        ```bash
+        npm install
+        ```
+<!-- 
+5. **Lanzar Instancias con PM2:**
 
     - Lanzar App 1 en puerto 3001
 
         ```bash
-        pm2 start app.js --name "app_v3001" -- env PORT=3001
+        pm2 start app.js --name "app1_3001"
         ```
 
     - Lanzar App 2 en puerto 3002
 
         ```bash
-        pm2 start app.js --name "app_v3002" -- env PORT=3002
+        pm2 start app.js --name "app2_3002"
         ```
 
     - Configurar auto-arranque
@@ -204,31 +237,136 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         pm2 startup
         ```
 
+        ```bash
+        pm2 save
+        ``` -->
+
 ### Ejercicio 3: Servidor de Base de Datos (VM Lab4.2-DB)
 
-1. **Instalar MariaDB:**
+1. En caso de haber clonado la VM, puedes cambiar el `hostname` utilizando el siguiente comando:
+
+    ```bash
+    sudo hostnamectl set-hostname db
+    ```
+    > Donde `db` es el nuevo `hostname` del VM.
+
+2. **Instalar MariaDB:**
 
     ```bash
     sudo apt install mariadb-server -y
     ```
 
-2. **Hardening:** 
+3. **Hardening:**: sigue los pasos para asegurar el servicio de MariaDB.
 
     ```bash
     sudo mysql_secure_installation
     ```
+    
+    <pre>
+    Enter current password for root (enter for none): ⮐
+    </pre>
+
+    <pre>
+    Switch to unix_socket authentication [Y/n] ⮐
+    </pre>
+
+    <pre>
+    Change the root password? [Y/n] ⮐
+    </pre>
+
+    <pre>
+    New password: (introduce tu contraseña) ⮐
+    </pre>
+
+    <pre>
+    Re-enter new password:: (vuelve a introducir tu contraseña) ⮐
+    </pre>
+
+    <pre>
+    Remove anonymous users? [Y/n] ⮐
+    </pre>
+
+    <pre>
+    Disallow root login remotely? [Y/n] ⮐
+    </pre>
+
+    <pre>
+    Remove test database and access to it? [Y/n] ⮐
+    </pre>
+
+    <pre>
+    Reload privilege tables now? [Y/n] ⮐
+    </pre>
+
+    Intenta conectarte al servidor de MariaDB para probar que todo esté correcto:
+
+    ```bash
+    mysql -u root -h localhost -p
+    ```
+
+    <pre>
+    Enter password: (introduce tu contraseña) ⮐
+    </pre>
+
+    <pre>
+    MariaDB [(none)]> quit ⮐
+    </pre>
 
 3. **Configurar Acceso:**
 
     - Editar el archivo `50-server.cnf` para cambiar `bind-address` a la IP interna de la VM Lab4.1-DB: `bind-address = 192.168.10.4`.
 
-    - **Configurar UFW:** Permitir el puerto **3306** solo desde la VM `Lab4.1-Apps` (`192.168.10.3`).
-
         ```bash
-        sudo ufw allow proto tcp from 192.168.10.3 to any port 3306
+        sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
         ```
 
-4. **Crear BD y Usuario:** Crear la base de datos `app_db` y el usuario `app_user` con permisos restringidos.
+        > Dentro del archivo remplaza `bind-address = 127.0.0.1` por `bind-address = 192.168.10.4`.
+
+    - Reinicia el servicio de MariaDB para aplicar cambios:
+
+        ```bash
+        sudo systemctl restart mariadb
+        ```
+
+4. **Crear BD y Usuario:** Crear la base de datos `db_movies` y el usuario `usr_movies` con permisos solo para esa base de datos.
+
+    - Accede al CLI de MariaDB:
+
+        ```bash
+        mysql -u root -h localhost -p
+        ```
+
+    - Crea la base de datos:
+
+        ```mysql
+        CREATE DATABASE db_movies;
+        ```
+
+    - Crea el usuario:
+
+        ```mysql
+        CREATE USER 'usr_movies'@'192.168.10.4' IDENTIFIED BY '(tu contraseña)';
+        ```
+
+    - Asigna permisos al usuario para la base de datos:
+
+        ```mysql
+        GRANT ALL PRIVILEGES ON db_movies.* TO 'usr_movies'@'192.168.10,4';
+        ```
+
+    - Ingresa con el nuevo usuario:
+
+        ```bash
+        mysql -u usr_movies -h 192.168.10.4 -p
+        ```
+
+    - Selecciona la base de datos `db_movies`:
+
+         ```bash
+        USE db_movies
+        ```
+    
+    - Ejecuta (copia y pega) los scripts de creación de la tabla movies y sus registros.
 
 ### Ejercicio 4: Servicios de Monitoreo (VM Lab4.1-Proxy)
 
