@@ -119,65 +119,31 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         sudo sysctl -p
         ```
 
-5. **Habilitar UFW:** Abrir solo los puertos 22, 80 y 3000 (para Grafana) en la interfaz NAT. 
-
-    - Instala UFW:
+    - Configura las reglas de `iptables` para redirigir el tráfico de la red interna (`enp0s8`) a través de la interfaz que tiene acceso a internet (`enp0s3`).
 
         ```bash
-        sudo apt install ufw
+        sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
         ```
 
-    - Habilita los servicios `SSH` (puerto `22`), `HTTP` (puerto `80`) y `HTTPS` (puerto `443`) en `UFW`:
+    - Guarda las reglas para que persistan después de reiniciar el servidor.
 
         ```bash
-        sudo ufw allow ssh
+        sudo apt install iptables-persistent
         ```
 
         ```bash
-        sudo ufw allow http
+        sudo netfilter-persistent save
         ```
-
-        ```bash
-        sudo ufw allow https
-        ```
-
-    - Habilita el puerto `3000` para `GRAFANA` en `UFW`:
-
-        ```bash
-        sudo ufw allow 3000/tcp
-        ```
-
-    - Configura las siguiente regla para el acceso a Internet desde el resto de VMs de la subred.
-
-        ```bash
-        sudo nano /etc/ufw/before.rules
-        ```
-
-        Añade al inicio del archivo la siguiente configuración, que es una regla de enmascaramiento para que las VMs tengan acceso a Internet:
-        ```nano
-        *nat
-        :POSTROUTING ACCEPT [0:0]
-        -A POSTROUTING -s 192.168.10.0/29 -o enp0s3 -j MASQUERADE
-        COMMIT
-        ```
-
-    - Habilita el servicio de `UFW`:
-
-        ```bash
-        sudo ufw enable
-        ```
-
-    - Verifica las reglas configuradas:
-
-        ```bash
-        sudo ufw status
-        ```
-
-    - Habilita internet para los equipos que se conectarán al Proxy:
 
 ### Ejercicio 2: Servidores de Aplicaciones (VM Lab4.1-Apps)
 
-1. Instalar Node.js y PM2:
+1. En caso de haber clonado la VM, puedes cambiar el hostname utilizando el siguiente comando:
+
+    ```bash
+    sudo hostnamectl set-hostname nuevo-nombre
+    ```
+
+2. Instalar Node.js y PM2:
 
     - Descarga e instala `nvm`:
 
@@ -211,13 +177,13 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         ```
         > Debería mostrar por ejemplo: "10.9.3"
 
-2. **Clonar aplicación del repositorio git:**
+3. **Clonar aplicación del repositorio git:**
 
     ```bash
     git clone ...
     ```
 
-3. **Lanzar Instancias con PM2:**
+4. **Lanzar Instancias con PM2:**
 
     - Lanzar App 1 en puerto 3001
 
