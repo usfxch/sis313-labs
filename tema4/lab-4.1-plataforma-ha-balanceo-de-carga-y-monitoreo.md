@@ -29,13 +29,13 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
     La red interna utilizará el segmento `192.168.10.0/29`.
 
-    | VM | Rol | Interfaces y Conexión | IP Interna (`/29`) |
-    | - | - | - | - |
-    | **VM 1** | **PROXY + MONITORING** | NAT (Internet) + Red Interna | `192.168.10.2`|
-    | **VM 2** | **APLICACIONES (Apps 1 y 2)** | Red Interna | `192.168.10.3` |
-    | **VM 3** | **BASE DE DATOS (DB)** | Red Interna | `192.168.10.4` |
+    | VM | Hostname | Rol | Interfaces y Conexión | IP Interna (`/29`) |
+    | - | - | - | - | - |
+    | `Lab4.1-Proxy` | `proxy` | **PROXY + MONITORING** | NAT (Internet) + Red Interna | `192.168.10.2`|
+    | `Lab4.1-Apps` | `apps` | **APLICACIONES (Apps 1 y 2)** | Red Interna | `192.168.10.3` |
+    | `Lab4.1-DB` | `db` | **BASE DE DATOS (DB)** | Red Interna | `192.168.10.4` |
 
-    - **Gateway (GW)**: La interfaz interna de la VM 1 actuará como router/puerta de enlace para el tráfico de salida de las VMs 2 y 3. (Se configura a mano el *binding*).
+    - **Gateway (GW)**: La interfaz interna de la VM `Lab4.1-Proxy` actuará como router/puerta de enlace para el tráfico de salida de las VMs 2 y 3. (Se configura a mano el *binding*).
 
 2. **Configuración de Red en VirtualBox**
 
@@ -43,23 +43,23 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
     2. **Configurar Interfaces de las VMs:**
 
-        - **VM 1 (Proxy/Monitoreo):**
+        - **VM Lab4.1-Proxy (Proxy/Monitoreo):**
 
             - Adaptador 1: **NAT** (Acceso a Internet).
 
             - Adaptador 2: **Red Interna** (`Red_Lab4_1`).
 
-        - **VM 2 (Aplicaciones):**
+        - **VM Lab4.1-Apps (Aplicaciones):**
 
             - Adaptador 1: **Red Interna** (`Red_Lab4_1`).
 
-        - **VM 3 (Base de Datos):**
+        - **VM Lab4.1-DB (Base de Datos):**
 
             - Adaptador 1: **Red Interna** (`Red_Lab4_1`).
     
-    3. **Reenvío de Puertos (Port Forwarding) en VM 1 (NAT)**
+    3. **Reenvío de Puertos (Port Forwarding) en VM Lab4.1-Proxy (NAT)**
 
-        Configurar en el Adaptador 1 (NAT) de la VM 1 **(Proxy/Monitoring)** para acceso desde la PC anfitriona.
+        Configurar en el Adaptador 1 (NAT) de la VM `Lab4.1-Proxy` **(Proxy/Monitoring)** para acceso desde la PC anfitriona.
 
         | Nombre | Protocolo | IP Host | Puerto Host | IP Invitado | Puerto Invitado | Propósito |
         | - | - | - | - | - | - | - |
@@ -70,9 +70,9 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 ## 💻 Práctica Guiada (Ejercicios Individuales)
 
-### Ejercicio 1: Proxy Inverso y Balanceo de Carga (VM 1)
+### Ejercicio 1: Proxy Inverso y Balanceo de Carga (VM Lab4.1-Proxy)
 
-1. **Configurar IPs Estáticas:** Asignar las IPs `192.168.10.2` (interna) a la VM 1 y las IPs correspondientes a las VMs 2 y 3 en Netplan.
+1. **Configurar IPs Estáticas:** Asignar las IPs `192.168.10.2` (interna) a la VM `Lab4.1-Proxy` y las IPs correspondientes a las VMs 2 y 3 en Netplan.
 
 2. **Instalar Nginx:**
 
@@ -82,7 +82,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 3. **Configurar el Balanceador:**
 
-    - Configurar el servidor y crear el bloque `upstream` en `/etc/nginx/sites-available/default` con las IPs de la VM 2 (donde correrán las dos apps, en diferentes puertos).
+    - Configurar el servidor y crear el bloque `upstream` en `/etc/nginx/sites-available/default` con las IPs de la VM `Lab4.1-Apps` (donde correrán las dos apps, en diferentes puertos).
 
         ```nginx
         upstream loadbalancer {
@@ -99,9 +99,83 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
             }
         }
         ```
-4. **Habilitar UFW:** Abrir solo los puertos 22, 80 y 8080 (para Grafana) en la interfaz NAT. 
 
-### Ejercicio 2: Servidores de Aplicaciones (VM 2)
+4. **Enrutamiento y NAT:**
+
+    - Habilitar el reenvío de paquetes en el kernel
+
+        Edita el archivo `sysctl.conf`:
+        ```bash
+        sudo nano /etc/sysctl.conf
+        ```
+    
+        Asegúrate de que esta línea esté presente y no comentada:
+        ```bash
+        net.ipv4.ip_forward=1
+        ```
+
+        Aplicar los cambios inmediatamente
+        ```bash
+        sudo sysctl -p
+        ```
+
+5. **Habilitar UFW:** Abrir solo los puertos 22, 80 y 3000 (para Grafana) en la interfaz NAT. 
+
+    - Instala UFW:
+
+        ```bash
+        sudo apt install ufw
+        ```
+
+    - Habilita los servicios `SSH` (puerto `22`), `HTTP` (puerto `80`) y `HTTPS` (puerto `443`) en `UFW`:
+
+        ```bash
+        sudo ufw allow ssh
+        ```
+
+        ```bash
+        sudo ufw allow http
+        ```
+
+        ```bash
+        sudo ufw allow https
+        ```
+
+    - Habilita el puerto `3000` para `GRAFANA` en `UFW`:
+
+        ```bash
+        sudo ufw allow 3000/tcp
+        ```
+
+    - Configura las siguiente regla para el acceso a Internet desde el resto de VMs de la subred.
+
+        ```bash
+        sudo nano /etc/ufw/before.rules
+        ```
+
+        Añade al inicio del archivo la siguiente configuración, que es una regla de enmascaramiento para que las VMs tengan acceso a Internet:
+        ```nano
+        *nat
+        :POSTROUTING ACCEPT [0:0]
+        -A POSTROUTING -s 192.168.10.0/29 -o enp0s3 -j MASQUERADE
+        COMMIT
+        ```
+
+    - Habilita el servicio de `UFW`:
+
+        ```bash
+        sudo ufw enable
+        ```
+
+    - Verifica las reglas configuradas:
+
+        ```bash
+        sudo ufw status
+        ```
+
+    - Habilita internet para los equipos que se conectarán al Proxy:
+
+### Ejercicio 2: Servidores de Aplicaciones (VM Lab4.1-Apps)
 
 1. Instalar Node.js y PM2:
 
@@ -163,7 +237,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         pm2 startup
         ```
 
-### Ejercicio 3: Servidor de Base de Datos (VM 3)
+### Ejercicio 3: Servidor de Base de Datos (VM Lab4.2-DB)
 
 1. **Instalar MariaDB:**
 
@@ -179,9 +253,9 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 3. **Configurar Acceso:**
 
-    - Editar el archivo `50-server.cnf` para cambiar `bind-address` a la IP interna de la VM 3: `bind-address = 192.168.10.4`.
+    - Editar el archivo `50-server.cnf` para cambiar `bind-address` a la IP interna de la VM Lab4.1-DB: `bind-address = 192.168.10.4`.
 
-    - **Configurar UFW:** Permitir el puerto **3306** solo desde la VM 2 (`192.168.10.3`).
+    - **Configurar UFW:** Permitir el puerto **3306** solo desde la VM `Lab4.1-Apps` (`192.168.10.3`).
 
         ```bash
         sudo ufw allow proto tcp from 192.168.10.3 to any port 3306
@@ -189,9 +263,9 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 4. **Crear BD y Usuario:** Crear la base de datos `app_db` y el usuario `app_user` con permisos restringidos.
 
-### Ejercicio 4: Servicios de Monitoreo (VM 1)
+### Ejercicio 4: Servicios de Monitoreo (VM Lab4.1-Proxy)
 
-1. **Instalar Prometheus y Grafana (en VM 1 - Proxy/Monitoring).**
+1. **Instalar Prometheus y Grafana (en VM Lab4.1-Proxy - Proxy/Monitoring).**
 
 2. **Instalar Node Exporter:** Instalar el agente en las **VMs 2 y 3** para exponer métricas del SO en el puerto `9100`.
 
@@ -233,9 +307,9 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
     | Rol en el Sistema | IP Asignada | Servidor (VM) | VLAN |
     | - | - | - | - |
     | **Gateway (GW) / Router**	| `192.168.(100+N).1` | Router de la Carrera | N |
-    | **PROXY + MONITOREO** | `192.168.(100+N).2` | VM 1 | N |
-    | **APLICACIÓN 1** | `192.168.(100+N).3` | VM 2 | N | 
-    | **APLICACIÓN 2** | `192.168.(100+N).4` | VM 3 | N | 
+    | **PROXY + MONITOREO** | `192.168.(100+N).2` | `Lab4.1-Proxy` | N |
+    | **APLICACIÓN 1** | `192.168.(100+N).3` | `Lab4.1-Apps` | N | 
+    | **APLICACIÓN 2** | `192.168.(100+N).4` | `Lab4.1-DB` | N | 
     | **BASE DE DATOS** | `192.168.(100+N).5` | VM 4 | N | 
 
 3. **Tareas Críticas de Configuración Grupal**
@@ -243,7 +317,7 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
     1. **Configuración de VLANs (Netplan):** En cada VM, configurar la interfaz de red para usar el VLAN ID asignado por el router central (si aplica).
 
         ```yaml
-        # Ejemplo en Netplan para la VM 1 (Proxy)
+        # Ejemplo en Netplan para la VM Lab4.1-Proxy (Proxy)
         network:
           version: 2
           renderer: networkd
@@ -261,11 +335,11 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
 
     2. **Hardening Avanzado (UFW):**
 
-        - **Proxy (VM 1):** Permitir tráfico saliente (`route allow`) a las IPs de las VMs 2, 3 y 4.
+        - **Proxy (VM Lab4.1-Proxy):** Permitir tráfico saliente (`route allow`) a las IPs de las VMs 2, 3 y 4.
 
         - **DB (VM 4):** Permitir puerto 3306 solo desde las IPs de las VMs 2 y 3.
 
-    3. **Ajuste del Proxy:** Modificar la configuración de Nginx en la VM 1 (Proxy) para que use las IPs reales de los servidores de aplicación:
+    3. **Ajuste del Proxy:** Modificar la configuración de Nginx en la VM `Lab4.1-Proxy` (Proxy) para que use las IPs reales de los servidores de aplicación:
 
         ```nginx
         upstream backend_apps {
@@ -275,7 +349,7 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
         ```
     4. **Monitoreo:** El servidor de Monitoreo debe ser capaz de acceder a los puertos 9100 y 3306 (si aplica) de todos los demás servidores para extraer métricas.
 
-    5. **Demostración Final:** Se probará la caída de una aplicación (VM 3) y se verificará el failover automático, y la alerta en Grafana.
+    5. **Demostración Final:** Se probará la caída de una aplicación (VM Lab4.1-DB) y se verificará el failover automático, y la alerta en Grafana.
 
 ### ✅ Evaluación del Laboratorio
 
