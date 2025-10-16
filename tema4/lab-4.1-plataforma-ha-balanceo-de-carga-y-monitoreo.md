@@ -216,30 +216,6 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         ```bash
         npm install
         ```
-<!-- 
-5. **Lanzar Instancias con PM2:**
-
-    - Lanzar App 1 en puerto 3001
-
-        ```bash
-        pm2 start app.js --name "app1_3001"
-        ```
-
-    - Lanzar App 2 en puerto 3002
-
-        ```bash
-        pm2 start app.js --name "app2_3002"
-        ```
-
-    - Configurar auto-arranque
-
-        ```bash
-        pm2 startup
-        ```
-
-        ```bash
-        pm2 save
-        ``` -->
 
 ### Ejercicio 3: Servidor de Base de Datos (VM Lab4.2-DB)
 
@@ -261,7 +237,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     ```bash
     sudo mysql_secure_installation
     ```
-    
+
     <pre>
     Enter current password for root (enter for none): ⮐
     </pre>
@@ -312,7 +288,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     MariaDB [(none)]> quit ⮐
     </pre>
 
-3. **Configurar Acceso:**
+4. **Configurar Acceso:**
 
     - Editar el archivo `50-server.cnf` para cambiar `bind-address` a la IP interna de la VM Lab4.1-DB: `bind-address = 192.168.10.4`.
 
@@ -328,7 +304,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         sudo systemctl restart mariadb
         ```
 
-4. **Crear BD y Usuario:** Crear la base de datos `db_movies` y el usuario `usr_movies` con permisos solo para esa base de datos.
+5. **Crear BD y Usuario:** Crear la base de datos `db_movies` y el usuario `usr_movies` con permisos solo para esa base de datos.
 
     - Accede al CLI de MariaDB:
 
@@ -345,13 +321,13 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     - Crea el usuario:
 
         ```mysql
-        CREATE USER 'usr_movies'@'192.168.10.4' IDENTIFIED BY '(tu contraseña)';
+        CREATE USER 'usr_movies'@'192.168.10.3' IDENTIFIED BY 'secret';
         ```
 
-    - Asigna permisos al usuario para la base de datos:
+    - Asigna todos los permisos al usuario para la base de datos:
 
         ```mysql
-        GRANT ALL PRIVILEGES ON db_movies.* TO 'usr_movies'@'192.168.10,4';
+        GRANT ALL PRIVILEGES ON db_movies.* TO 'usr_movies'@'192.168.10.3';
         ```
 
     - Ingresa con el nuevo usuario:
@@ -368,7 +344,45 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     
     - Ejecuta (copia y pega) los scripts de creación de la tabla movies y sus registros.
 
-### Ejercicio 4: Servicios de Monitoreo (VM Lab4.1-Proxy)
+### Ejercicio 4: Lanzar Instancias con PM2 (VM Lab4.1-Apps)
+
+    - Dentro de cada App debes copiar el archivo `.env.example` a `.env`. Asegurate que el archivo de App 1 tenga el puerto `3001` y el de App 2 tenga el puerto `3002`.
+
+    - Prueba si todo está correcto en ambas Apps utilizando el comando `node`:
+
+        ```bash
+        node app.js
+        ```
+
+        El mensaje que debería salir en consola debe ser el siguiente:
+        <pre>
+        Servidor ejecutándose en el puerto 3001
+        Conexión a MariaDB exitosa. Pool creado y probado.
+        </pre>
+
+    - Lanzar App 1 en puerto 3001
+
+        ```bash
+        pm2 start app.js --name app1_3001
+        ```
+
+    - Lanzar App 2 en puerto 3002
+
+        ```bash
+        pm2 start app.js --name app2_3002
+        ```
+
+    - Configurar auto-arranque
+
+        ```bash
+        pm2 startup
+        ```
+
+        ```bash
+        pm2 save
+        ```
+
+### Ejercicio 5: Servicios de Monitoreo (VM Lab4.1-Proxy)
 
 1. **Instalar Prometheus y Grafana (en VM Lab4.1-Proxy - Proxy/Monitoring).**
 
