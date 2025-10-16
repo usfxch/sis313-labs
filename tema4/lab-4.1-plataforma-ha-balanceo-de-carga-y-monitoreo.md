@@ -137,11 +137,12 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 ### Ejercicio 2: Servidores de Aplicaciones (VM Lab4.1-Apps)
 
-1. En caso de haber clonado la VM, puedes cambiar el hostname utilizando el siguiente comando:
+1. En caso de haber clonado la VM, puedes cambiar el `hostname` utilizando el siguiente comando:
 
     ```bash
-    sudo hostnamectl set-hostname nuevo-nombre
+    sudo hostnamectl set-hostname apps
     ```
+    > Donde `apps` es el nuevo `hostname` del VM.
 
 2. Instalar Node.js y PM2:
 
