@@ -322,7 +322,7 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
     - Ingresa con el nuevo usuario:
 
         ```bash
-        mysql -u usr_movies -h 192.168.10.4 -p
+        mysql -u root -h localhost -p
         ```
 
     - Selecciona la base de datos `db_movies`:
@@ -332,6 +332,27 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         ```
     
     - Ejecuta (copia y pega) los scripts de creación de la tabla movies y sus registros.
+
+        ```sql
+        CREATE TABLE movies (
+            id serial PRIMARY KEY,
+            title character varying(150) NOT NULL,
+            year integer,
+            UNIQUE(title)
+        );
+        
+        INSERT INTO movies (title, year) VALUES
+            ('Inception', 2010),
+            ('The Matrix', 1999),
+            ('Pulp Fiction', 1994),
+            ('The Dark Knight', 2008),
+            ('Eternal Sunshine of the Spotless Mind', 2004),
+            ('Forrest Gump', 1994),
+            ('Fight Club', 1999),
+            ('The Godfather', 1972),
+            ('Interstellar', 2014),
+            ('Parasite', 2019);
+        ```
 
 ### Ejercicio 4: Lanzar Instancias con PM2 (VM Lab4.1-Apps)
 
@@ -375,20 +396,65 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
 
 1. **Instalar Prometheus y Grafana (en VM Lab4.1-Proxy - Proxy/Monitoring).**
 
-2. **Instalar Node Exporter:** Instalar el agente en las **VMs 2 y 3** para exponer métricas del SO en el puerto `9100`.
+    - Instale los paquetes de requisitos previos:
 
-3. **Configurar Prometheus:**
-
-    - Editar `prometheus.yml` para incluir los targets de las VMs 2 y 3:
-
-        ```yaml
-        scrape_configs:
-          - job_name: 'node_apps'
-            static_configs:
-              - targets: ['192.168.10.3:9100', '192.168.10.4:9100'] # Apps y DB
+        ```bash
+        sudo apt-get install -y apt-transport-https software-properties-common wget
         ```
 
-4. **Integrar y Visualizar:** Acceder a Grafana (vía el puerto `8080` de su PC anfitriona). Añadir Prometheus como fuente de datos y visualizar las métricas del sistema.
+    - Importar la clave GPG:
+
+        ```bash
+        sudo mkdir -p /etc/apt/keyrings/
+        ```
+        
+        ```bash
+        wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+        ```
+
+    - Para agregar un repositorio para versiones estables, ejecute el siguiente comando:
+
+        ```bash
+        echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+        ```
+
+    - Ejecute el siguiente comando para actualizar la lista de paquetes disponibles:
+
+        ```bash
+        sudo apt update
+        ```
+
+    - Para instalar Grafana OSS, ejecute el siguiente comando:
+
+        ```bash
+        sudo apt install grafana
+        ```
+
+    - Habilitamos el servicio de Grafana:
+
+        ```bash
+        sudo systemctl enable grafana-server
+        ```
+
+        ```bash
+        sudo systemctl start grafana-server
+        ```
+
+2. **Instalar Node Exporter:** Instalar el agente en las **VMs Lab4.1-Proxy, Lab4.1-Apps y Lab4.1-DB** para exponer métricas del SO en el puerto `9100`.
+
+    ```bash
+    sudo apt install prometheus prometheus-node-exporter
+    ```
+
+    > Comprueba desde cada VM que puedes acceder a las métricas: `curl http://localhost:9100/metrics`
+
+4. **Integrar y Visualizar:** Acceder a Grafana (vía el puerto `8080` de su PC anfitriona). 
+
+    - Accede con usuario `admin` y contraseña `admin`. Luego de ingresar, te pedirá poner una nueva contraseña.
+
+    - Añade las fuentes de datos (`data source`) de `Prometheus` de cada VM. Utiliza los nombres `prometheus-proxy` (`http://192.168.10.2:9090`), `prometheus-apps` (`http://192.168.10.3:9090`) y `prometheus-db` (`http://192.168.10.4:9090`) según la VM que corresponda.
+
+    - Importa los Dashboard `Node Exporter Full` (ID: `1860`) y `Node Exporter Full with Node Name` (ID: `10242`) para que puedas monitorear el estado de cada VM y visualizar las métricas del sistema.
 
 ## ⚙️ Práctica en Grupo (Réplica en Centro de Datos)
 
