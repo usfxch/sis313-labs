@@ -503,8 +503,8 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
             ens18:
               dhcp4: no
               optional: true
-              addresses:
-              - "192.168.100.202/24"
+              addresses: # Esto si gustan lo pueden comentar una vez que la VLAN esté funcionando
+              - "192.168.100.202/24" # Esto si gustan lo pueden comentar una vez que la VLAN esté funcionando
           vlans:
             vlan101: # Reemplazar 101 por VLAN ID (100+N)
               id: 101
