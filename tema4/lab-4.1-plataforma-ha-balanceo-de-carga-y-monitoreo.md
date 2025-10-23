@@ -509,7 +509,11 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
             vlan101: # Reemplazar 101 por VLAN ID (100+N)
               id: 101
               link: ens18
-              addresses: [192.168.101.2/29]
+              addresses:
+                - "192.168.101.2/29"
+              nameservers:
+                addresses:
+                - 8.8.8.8
               routes:
                 - to: default
                   via: 192.168.101.1
