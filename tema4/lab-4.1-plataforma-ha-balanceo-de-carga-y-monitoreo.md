@@ -542,7 +542,7 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
         
         - Proxy: http://201.131.45.42/vlan101/web (asociado a http://192.168.101.2:80)
 
-        - Grafana: http://201.131.45.42/vlan101/grafana (asociado a http://192.168.101.2:3000)
+        - Grafana: http://201.131.45.42/vlan101/monitoring (asociado a http://192.168.101.2:3000)
 
     6. **Demostración Final:** Se probará la caída de una aplicación (VM App 1 o VM App 2) y se verificará el failover automático del balanceador, y la alerta en Grafana.
 
