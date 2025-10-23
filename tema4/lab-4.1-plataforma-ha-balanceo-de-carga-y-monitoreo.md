@@ -319,6 +319,12 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         GRANT ALL PRIVILEGES ON db_movies.* TO 'usr_movies'@'192.168.10.3';
         ```
 
+    - Aplica cambios en MariaDB de los permisos asignados:
+
+        ```mysql
+        FLUSH PRIVILEGES;
+        ```
+
     - Ingresa con el nuevo usuario:
 
         ```bash
