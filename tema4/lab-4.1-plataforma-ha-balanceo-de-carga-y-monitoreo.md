@@ -319,10 +319,14 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         GRANT ALL PRIVILEGES ON db_movies.* TO 'usr_movies'@'192.168.10.3';
         ```
 
-    - Aplica cambios en MariaDB de los permisos asignados:
+    - Aplica cambios en MariaDB de los permisos asignados y sal del CLI de MariaDB:
 
         ```mysql
         FLUSH PRIVILEGES;
+        ```
+
+        ```mysql
+        quit
         ```
 
     - Ingresa con el nuevo usuario:
@@ -358,6 +362,12 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
             ('The Godfather', 1972),
             ('Interstellar', 2014),
             ('Parasite', 2019);
+        ```
+
+    - Sal del CLI de MariaDB:
+
+        ```mysql
+        quit
         ```
 
 ### Ejercicio 4: Lanzar Instancias con PM2 (VM Lab4.1-Apps)
@@ -550,9 +560,9 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
 
     5. **Acceso a la Proxy y Grafana desde Internet:** Para acceder al Proxy y Grafana se han configurado rutas en el Servidor Docente. Para ello, deberás acceder a las siguientes rutas:
         
-        - Proxy: http://201.131.45.42/vlan101/web (asociado a http://192.168.101.2:80). Reemplazar 101 por VLAN ID (100+N)
+        - Proxy: https://vlan101-app.rootcode.com.bo (asociado a http://192.168.101.2:80). Reemplazar 101 por VLAN ID (100+N)
 
-        - Grafana: http://201.131.45.42/vlan101/monitoring (asociado a http://192.168.101.2:3000). Reemplazar 101 por VLAN ID (100+N)
+        - Grafana: https://vlan101-monitoring.rootcode.com.bo (asociado a http://192.168.101.2:3000). Reemplazar 101 por VLAN ID (100+N)
 
     6. **Demostración Final:** Se probará la caída de una aplicación (VM App 1 o VM App 2) y se verificará el failover automático del balanceador, y la alerta en Grafana.
 
