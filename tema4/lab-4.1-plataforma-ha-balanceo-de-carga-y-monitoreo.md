@@ -430,6 +430,10 @@ El entorno se desarrollará en una sola PC utilizando 3 Máquinas Virtuales (VMs
         sudo apt install grafana
         ```
 
+        ```bash
+        sudo systemctl daemon-reload
+        ```
+
     - Habilitamos el servicio de Grafana:
 
         ```bash
@@ -478,53 +482,76 @@ El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas 
 
     El docente proveerá la IP del **Gateway (GW)** (`192.168.(100+N).1`).
 
-    | Rol en el Sistema | IP Asignada | Servidor (VM) | VLAN |
+    | Rol en el Sistema | IP Asignada | Servidor (VM) | VLAN ID |
     | - | - | - | - |
-    | **Gateway (GW) / Router**	| `192.168.(100+N).1` | Router de la Carrera | N |
-    | **PROXY + MONITOREO** | `192.168.(100+N).2` | `Lab4.1-Proxy` | N |
-    | **APLICACIÓN 1** | `192.168.(100+N).3` | `Lab4.1-Apps` | N | 
-    | **APLICACIÓN 2** | `192.168.(100+N).4` | `Lab4.1-DB` | N | 
-    | **BASE DE DATOS** | `192.168.(100+N).5` | VM 4 | N | 
+    | **Gateway (GW) / Router**	| `192.168.(100+N).1` | Server Docente | 100+N |
+    | **PROXY + MONITOREO** | `192.168.(100+N).2` | VM Proxy (alumno 1) | 100+N |
+    | **APLICACIÓN 1** | `192.168.(100+N).3` | VM App 1 (alumno 2) | 100+N | 
+    | **APLICACIÓN 2** | `192.168.(100+N).4` | VM App 2 (alumno 3) | 100+N | 
+    | **BASE DE DATOS** | `192.168.(100+N).5` | VM DB (alumno 4) | 100+N | 
 
 3. **Tareas Críticas de Configuración Grupal**
 
     1. **Configuración de VLANs (Netplan):** En cada VM, configurar la interfaz de red para usar el VLAN ID asignado por el router central (si aplica).
 
         ```yaml
-        # Ejemplo en Netplan para la VM Lab4.1-Proxy (Proxy)
+        # Ejemplo en Netplan para la VM Proxy (Proxy)
         network:
           version: 2
           renderer: networkd
           ethernets:
-            enp0s3: {}
+            ens18:
+              dhcp4: no
+              optional: true
+              addresses:
+              - "192.168.100.202/24"
           vlans:
             vlan101: # Reemplazar 101 por VLAN ID (100+N)
               id: 101
-              link: enp0s3
+              link: ens18
               addresses: [192.168.101.2/29]
               routes:
                 - to: default
                   via: 192.168.101.1
         ```
 
-    2. **Hardening Avanzado (UFW):**
-
-        - **Proxy (VM Lab4.1-Proxy):** Permitir tráfico saliente (`route allow`) a las IPs de las VMs 2, 3 y 4.
+    2. **Hardening (UFW):**
 
         - **DB (VM 4):** Permitir puerto 3306 solo desde las IPs de las VMs 2 y 3.
 
-    3. **Ajuste del Proxy:** Modificar la configuración de Nginx en la VM `Lab4.1-Proxy` (Proxy) para que use las IPs reales de los servidores de aplicación:
+    3. **Ajuste del Proxy:** Modificar la configuración de Nginx en la VM Proxy para que use las IPs reales de los servidores de aplicación:
 
         ```nginx
-        upstream backend_apps {
-            server 192.168.(100+N).3:3000;
-            server 192.168.(100+N).4:3000;
+        upstream loadbalancer {
+            server 192.168.101.3:3000; # App 1, reemplazar 101 por VLAN ID (100+N)
+            server 192.168.101.4:3000; # App 2, reemplazar 101 por VLAN ID (100+N)
+        }
+
+        server {
+            listen 80;
+            server_name _;
+
+            location / {
+                proxy_pass http://loadbalancer;
+            }
         }
         ```
-    4. **Monitoreo:** El servidor de Monitoreo debe ser capaz de acceder a los puertos 9100 y 3306 (si aplica) de todos los demás servidores para extraer métricas.
+    4. **Monitoreo:** El servidor de Monitoreo debe ser capaz de acceder a los puertos 9100 de todos los demás servidores; es decir: a si mismo (Proxy), a las Apps (App 1 y App2) y a la BD, para extraer métricas.
 
-    5. **Demostración Final:** Se probará la caída de una aplicación (VM Lab4.1-DB) y se verificará el failover automático, y la alerta en Grafana.
+    5. **Acceso a la Proxy y Grafana desde Internet:** Para acceder al Proxy y Grafana se han configurado rutas en el Servidor Docente. Para ello, deberás acceder a las siguientes rutas:
+        
+        - Proxy: http://201.131.45.42/vlan101/web (asociado a http://192.168.101.2:80)
+
+        - Grafana: http://201.131.45.42/vlan101/grafana (asociado a http://192.168.101.2:3000)
+
+    6. **Demostración Final:** Se probará la caída de una aplicación (VM App 1 o VM App 2) y se verificará el failover automático del balanceador, y la alerta en Grafana.
 
 ### ✅ Evaluación del Laboratorio
 
-La evaluación de este laboratorio se basará en los siguientes puntos, que demuestran el dominio de los conceptos y la correcta ejecución de los pasos.
+La evaluación de este laboratorio se basará en los siguientes puntos:
+
+- Desarrollo de la práctica individual: 35 pts 
+
+- Desarrollo de la práctica grupal: 35 pts
+
+- Informe detallado con capturas de pantalla que demuestren ambas prácticas: 30 pts
