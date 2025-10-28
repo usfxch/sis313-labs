@@ -89,6 +89,10 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
         ```
 
         ```bash
+        sudo ufw allow 3000/tcp # Habilitar para Grafana
+        ```
+
+        ```bash
         sudo ufw allow 2222/tcp  # Nuevo puerto SSH
         ```
 
