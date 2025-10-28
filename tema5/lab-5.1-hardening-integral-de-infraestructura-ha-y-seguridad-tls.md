@@ -1,4 +1,4 @@
-# Laboratorio 5.1: 
+# Laboratorio 5.1: Hardening Integral de Infraestructura HA y Seguridad TLS
 
 **Universidad San Francisco Xavier de Chuquisaca**
 
@@ -201,7 +201,7 @@ A diferencia de los ejercicios de la práctica individual, debes considerar lo s
     # En el bloque server 80 { ... y server 443 { ... de Nginx (Proxy)
 
     # Permitir solo la IP del Gateway (GW)
-    allow 192.168.101.1; 
+    allow 192.168.200.1; # Debe cambiar la VLAN por la que te asignaron
     # Denegar todas las demás
     deny all; 
     ```
