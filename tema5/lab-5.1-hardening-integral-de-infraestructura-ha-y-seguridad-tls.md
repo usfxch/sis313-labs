@@ -55,10 +55,16 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
     - Aplicar cambios
 
         ```bash
-        sudo systemctl restart sshd
+        sudo systemctl restart ssh
         ```
 
 2. **Configuración de Firewall (UFW):**
+
+    - Instalar UFW por si no estuviese instalado
+
+        ```bash
+        sudo apt install ufw
+        ```
 
     - Añadir política "Denegar por Defecto" (en todas las VMs)
 
