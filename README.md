@@ -32,3 +32,7 @@
 
 - [Laboratorio 4.1: Plataforma HA, Balanceo de Carga y Monitoreo](tema4/lab-4.1-plataforma-ha-balanceo-de-carga-y-monitoreo.md)
 
+### Tema 5: Seguridad y Hardening de Servidores
+
+- [Laboratorio 5.1: Hardening Integral de Infraestructura HA y Seguridad TLS](tema5/lab-5.1-hardening-integral-de-infraestructura-ha-y-seguridad-tls.md)
+
