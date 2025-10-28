@@ -58,6 +58,10 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
         sudo systemctl restart ssh
         ```
 
+        ```bash
+        sudo reboot # En caso de que los cambios no se apliquen
+        ```
+
 2. **Configuración de Firewall (UFW):**
 
     - Instalar UFW por si no estuviese instalado
