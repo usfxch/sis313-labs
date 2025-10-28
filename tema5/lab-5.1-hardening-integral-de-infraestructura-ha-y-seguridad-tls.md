@@ -97,7 +97,15 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
     - Añadir permisos específicos (Ejemplo de VM 2: App - Solo desde Proxy)
 
         ```bash
-        sudo ufw allow from 192.168.10.2 to any port 8080 # Puerto de la App
+        sudo ufw allow from 192.168.10.2 to any port 2222 # Puerto de la App 1
+        ```
+
+        ```bash
+        sudo ufw allow from 192.168.10.2 to any port 3001 # Puerto de la App 1
+        ```
+
+        ```bash
+        sudo ufw allow from 192.168.10.2 to any port 3002 # Puerto de la App 2
         ```
 
         > **Explicación:** El acceso se restringe por IP de origen. Esto garantiza que si el Proxy (VM 1) es comprometido, el atacante no pueda acceder directamente a a la App (VM 2).
