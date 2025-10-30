@@ -121,7 +121,7 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
     - Añadir permisos específicos (Ejemplo de VM 3: DB - Solo desde App)
 
         ```bash
-        sudo ufw allow from 192.168.10.2 to any port 2222 # Puerto de la App 1
+        sudo ufw allow from 192.168.10.2 to any port 2222
         ```
 
         ```bash
