@@ -213,53 +213,10 @@ Esta configuración debe replicarse en las tres VMs (Proxy, App, DB). El objetiv
 
     > **Explicación:** Se fuerzan las versiones modernas de TLS (TLSv1.2 y TLSv1.3) y se especifica un conjunto de cifrados robustos (ssl_ciphers). Esto previene el uso de algoritmos obsoletos y vulnerables (como SSLv3 o TLSv1.0), que podrían ser explotados en ataques de criptografía.
 
-## ⚙️ Práctica en Grupo (Réplica en Centro de Datos)
-
-El objetivo es aplicar los ejercicios individuales en un entorno de 4 Máquinas Virtuales (VMs) reales, cada una con su rol, VLAN y subred asignada por grupo.
-
-A diferencia de los ejercicios de la práctica individual, debes considerar lo siguiente:
-
-1. **Restricción de Acceso de Borde (Seguridad Perimetral):**
-
-    Modificar el archivo `/etc/nginx/sites-available/default` del Proxy para solo permitir solicitudes del Gateway de la VLAN:
-
-    ```nano
-    # En el bloque server 80 { ... y server 443 { ... de Nginx (Proxy)
-
-    # Permitir solo la IP del Gateway (GW)
-    allow 192.168.200.1; # Debe cambiar la VLAN por la que te asignaron
-    # Denegar todas las demás
-    deny all; 
-    ```
-
-    ```bash
-    sudo nginx -t && sudo systemctl reload nginx
-    ```
-
-    > **Explicación:** Este es un paso de seguridad perimetral avanzado. Se simula que la infraestructura está detrás de un firewall o un servicio CDN/WAF (como Cloudflare). **Al restringir el acceso a Nginx solo a la IP del Gateway**, se garantiza que el tráfico no pueda saltarse la capa de seguridad y acceder directamente a nuestro servidor de origen.
-
-2. **Certificado de Origen Cloudflare:**
-
-    Modificar el archivo `/etc/nginx/sites-available/default` del Proxy para instalar el certificado:
-
-    ```nano
-    # Sustituir las rutas del certificado autofirmado por los de Origen:
-    ssl_certificate /etc/nginx/ssl/origin.pem;
-    ssl_certificate_key /etc/nginx/ssl/origin.key;
-    ```
-
-    ```bash
-    sudo nginx -t && sudo systemctl reload nginx
-    ```
-
-    > **Explicación:** Se reemplaza el certificado autofirmado por el certificado de origen. Este certificado, emitido por Cloudflare, es reconocido por el Gateway (Server Docente) y asegura que la comunicación entre el punto de borde de Cloudflare y el servidor de origen (nuestra VM) sea completamente cifrada y segura. El cliente final seguirá viendo el certificado de Cloudflare, pero el tráfico interno de la red (Origin) está protegido.
-
 ### ✅ Evaluación del Laboratorio
 
 La evaluación de este laboratorio se basará en los siguientes puntos:
 
-- Desarrollo de la práctica individual: 35 pts 
-
-- Desarrollo de la práctica grupal: 35 pts
+- Desarrollo de la práctica individual: 70 pts 
 
 - Informe detallado con capturas de pantalla que demuestren ambas prácticas: 30 pts
