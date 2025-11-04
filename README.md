@@ -37,5 +37,5 @@
 - [Laboratorio 5.1: Hardening Integral de Infraestructura HA y Seguridad TLS](tema5/lab-5.1-hardening-integral-de-infraestructura-ha-y-seguridad-tls.md)
 
 ### Tema 6: Automatización de la Administración y Backups
-- [Laboratorio 6: Automatización de Administración y Backups Seguros](tema6/lab-6-automatizacióon-de-la-administración-y-backups.md)
+- [Laboratorio 6: Automatización de Administración y Backups Seguros](tema6/lab-6-automatizacion-de-la-administracion-y-backups.md)
 
