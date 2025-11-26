@@ -39,3 +39,15 @@
 ### Tema 6: Automatización de la Administración y Backups
 - [Laboratorio 6: Automatización de Administración y Backups Seguros](tema6/lab-6-automatizacion-de-la-administracion-y-backups.md)
 
+
+---
+
+## Proyecto Final
+
+### 📝 Plantilla 1: Documentación del Proyecto (README.md para GitHub)
+
+Esta plantilla está diseñada para servir como el archivo principal README.md en el repositorio de GitHub, proveyendo una documentación técnica clara y profesional.
+
+- [Formato base de documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
+
+- [Formato de Diapositivas para Presentación Final](proyecto-final/formato-diapositivas.md)
