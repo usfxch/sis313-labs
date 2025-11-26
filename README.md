@@ -44,7 +44,7 @@
 
 ## Proyecto Final
 
-Plantillas listas para ser usadas en GitHub (README) y para las diapositivas de la presentación final, asegurando que cubran todos los aspectos avanzados como HA, tolerancia a fallos, monitoreo y automatización.
+Plantillas listas para ser usadas en GitHub (README) y para las diapositivas de la presentación final; asegurando que cubran todos los aspectos avanzados como HA, tolerancia a fallos, monitoreo y automatización.
 
 - [Plantilla 1: Documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
 
