@@ -44,10 +44,8 @@
 
 ## Proyecto Final
 
-### 📝 Plantilla 1: Documentación del Proyecto (README.md para GitHub)
+Plantillas listas para ser usadas en GitHub (README) y para las diapositivas de la presentación final, asegurando que cubran todos los aspectos avanzados como HA, tolerancia a fallos, monitoreo y automatización.
 
-Esta plantilla está diseñada para servir como el archivo principal README.md en el repositorio de GitHub, proveyendo una documentación técnica clara y profesional.
+- [Plantilla 1: Documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
 
-- [Formato base de documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
-
-- [Formato de Diapositivas para Presentación Final](proyecto-final/formato-diapositivas.md)
+- [Plantilla 2: Formato de Diapositivas para Presentación Final](proyecto-final/formato-diapositivas.md)
