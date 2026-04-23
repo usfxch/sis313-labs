@@ -87,6 +87,22 @@ Tu organización requiere preparar un servidor de desarrollo que será compartid
   - Estado de servicio SSH
   - Intento de acceso a datos_empresa desde usuario `guest` (mostrando denegación)
 
+**Comandos esperados:**
+  ```bash
+  sudo useradd -m -s /bin/bash -G sudo developer
+  sudo useradd -m -s /bin/bash guest
+  echo "developer:PASSWORD" | sudo chpasswd
+  echo "guest:PASSWORD" | sudo chpasswd
+  free -h && df -h
+  ps aux --sort=-%mem | head -5
+  sudo mkdir -p /opt/datos_empresa
+  sudo chown developer:developers /opt/datos_empresa
+  sudo chmod 750 /opt/datos_empresa
+  grep "Failed password" /var/log/auth.log | wc -l
+  sudo systemctl status ssh
+  sudo journalctl -u ssh -n 10
+  ```
+
 ## 📝 ENTREGA DEL EJERCICIO 1
 
 Debe incluir:
@@ -153,6 +169,23 @@ Una empresa de desarrollo necesita implementar un sistema de almacenamiento redu
   - Intento de acceso a archivos en RAID con un disco fallido (demostrando operabilidad)
   - Estado final después de remoción del disco
   - Progreso de resincronización durante recuperación
+
+**Comandos esperados:**
+  ```bash
+  sudo fdisk -l
+  sudo mdadm --create --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sdb /dev/sdc
+  sudo mkfs.ext4 /dev/md0
+  sudo mkdir -p /mnt/raid-datos
+  sudo mount /dev/md0 /mnt/raid-datos
+  cat /proc/mdstat
+  sudo mdadm --detail /dev/md0
+  sudo mdadm /dev/md0 --fail /dev/sdc
+  sudo mdadm /dev/md0 --remove /dev/sdc
+  sudo mdadm /dev/md0 --add /dev/sdc
+  watch cat /proc/mdstat
+  df -h /mnt/raid-datos
+  time dd if=/dev/zero of=/mnt/raid-datos/test.img bs=1M count=100
+  ```
 
 ## 📝 ENTREGA DEL EJERCICIO 2
 
@@ -260,6 +293,32 @@ Una aplicación web crítica de una empresa necesita estar disponible 24/7 sin i
   - Acceso a aplicación mediante VIP después de failover (demostrando continuidad)
   - Logs de Keepalived mostrando eventos de failover
   - Estado final cuando MASTER se recupera
+
+**Comandos esperados:**
+  ```bash
+  # Diagnostico inicial
+  ip addr show
+  ping -c 3 <IP otra maquina>
+  sudo systemctl status nginx
+  sudo systemctl status keepalived
+  
+  # Configuración
+  sudo nano /etc/keepalived/keepalived.conf
+  sudo systemctl restart keepalived
+  
+  # Pruebas de conectividad
+  curl http://localhost:80
+  curl http://<VIP>:80
+  
+  # Simulación de falla
+  sudo systemctl stop nginx  # o stop keepalived
+  sudo systemctl start nginx
+  
+  # Monitoreo
+  watch -n 1 'ip addr show | grep <VIP>'
+  sudo journalctl -u keepalived -f
+  sudo journalctl -u keepalived -n 50 --no-pager
+  ```
 
 ## 📝 ENTREGA DEL EJERCICIO 3
 
