@@ -289,7 +289,7 @@ En esta sección, se configurará la infraestructura con las siguientes máquina
 
     - **Pruebas:** Desde la VM de Ventas, intenta conectar por `ssh` a la PC Contabilidad y a un Servidor de la DMZ para verificar si tienes o no acceso.
 
-## ⚙️ Sección 3: Práctica en Grupo
+## ⚙️ Sección 3: Práctica en Grupo (2 personas mínimo)
 
 Se requiere que el grupo complete la configuración de la infraestructura en una única PC anfitriona con mayores recursos. Los miembros del grupo que no tengan acceso a esta PC pueden seguir el mismo proceso en sus equipos personales, replicando la configuración hasta donde sus recursos lo permitan.
 
