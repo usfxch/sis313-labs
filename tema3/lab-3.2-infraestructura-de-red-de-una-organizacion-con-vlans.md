@@ -335,4 +335,4 @@ La evaluación de este laboratorio se centrará en la correcta implementación d
 
 4. **Informe de Laboratorio (30 pts)**
 
-    El informe debe ser detallado con capturas de pantalla que demuestren cada uno de los pasos realizados.
+    El informe debe realizarse en formato Markdown y debe ser detallado con capturas de pantalla que demuestren cada uno de los pasos realizados.
