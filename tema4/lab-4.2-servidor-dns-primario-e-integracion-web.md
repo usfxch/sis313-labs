@@ -543,4 +543,4 @@ La evaluación de este laboratorio se basará en los siguientes puntos:
 
 - Desarrollo de la práctica individual: 35 pts 
 - Desarrollo de la práctica grupal: 35 pts
-- Informe detallado con capturas de pantalla que demuestren ambas prácticas: 30 pts
+- Informe detallado en formato markdown con comandos utilizados y capturas de pantalla que demuestren ambas prácticas: 30 pts
