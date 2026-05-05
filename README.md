@@ -30,7 +30,9 @@
 
 ### Tema 4: Infraestructura de Networking
 
-- Laboratorio 4.1: Plataforma HA, Balanceo de Carga y Monitoreo
+- [Laboratorio 4.1: Plataforma HA, Balanceo de Carga y Monitoreo](tema4/lab-4.1-plataforma-ha-balanceo-de-carga-y-monitoreo.md)
+
+- [Laboratorio 4.2: Servidor DNS Primario e Integración Web](tema4/lab-4.2-servidor-dns-primario-e-integracion-web.md)
 
 ### Tema 5: Seguridad y Hardening de Servidores
 
