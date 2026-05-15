@@ -36,7 +36,22 @@
 
 ### Tema 5: Seguridad y Hardening de Servidores
 
-- Laboratorio 5.1: Hardening Integral de Infraestructura HA y Seguridad TLS
+- [Laboratorio 5.1: Hardening Integral de Infraestructura HA y Seguridad TLS](tema5/lab-5.1-hardening-integral-y-seguridad-tls.md)
+
+- [Laboratorio 5.2: Detección de Intrusiones y Respuesta a Incidentes](tema5/lab-5.2-deteccion-de-intrusiones-y-respuesta-a-incidentes.md)
 
 ### Tema 6: Automatización de la Administración y Backups
-- Laboratorio 6.1: Automatización de Administración y Backups Seguros
+
+- [Laboratorio 6.1: Automatización de Tareas Administrativas con Bash](tema6/lab-6.1-automatizacion-de-tareas-administrativas-con-bash.md)
+
+- [Laboratorio 6.2: Backups Automáticos, Rotación y Recuperación](tema6/lab-6.2-backups-automaticos-rotacion-y-recuperacion.md)
+
+---
+
+### Exámenes
+
+- [1er Parcial - Enunciado](examenes/1er_parcial_enunciado.md)
+
+- [2do Parcial - Enunciado](examenes/2do_parcial_enunciado.md)
+
+- **Examen Final — Banco de Proyectos:** [Ver 22 proyectos integradores](examenes/banco_proyectos_final.md)
