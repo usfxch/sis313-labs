@@ -54,4 +54,6 @@
 
 - [2do Parcial - Enunciado](examenes/2do_parcial_enunciado.md)
 
+- [2do Parcial - Avance de Proyecto Final](examenes/2do_parcial_avance_proyecto_final.md)
+
 - **Examen Final — Banco de Proyectos:** [Ver 22 proyectos integradores](examenes/banco_proyectos_final.md)
