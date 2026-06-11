@@ -57,3 +57,13 @@
 - [2do Parcial - Avance de Proyecto Final](examenes/2do_parcial_avance_proyecto_final.md)
 
 - **Examen Final — Banco de Proyectos:** [Ver 22 proyectos integradores](examenes/banco_proyectos_final.md)
+
+---
+
+## Proyecto Final
+
+Plantillas listas para ser usadas en GitHub (README) y para las diapositivas de la presentación final; asegurando que cubran todos los aspectos avanzados como HA, tolerancia a fallos, monitoreo y automatización.
+
+- [Plantilla 1: Documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
+
+- [Plantilla 2: Formato de Diapositivas para Presentación Final](proyecto-final/formato-diapositivas.md)
