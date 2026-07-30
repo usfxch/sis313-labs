@@ -4,7 +4,7 @@
 
 **Docente:** Ing. Marcelo Quispe Ortega
 
-**Semestre:** 1/2026
+**Semestre:** 2/2026
 
 ---
 
@@ -45,25 +45,3 @@
 - [Laboratorio 6.1: Automatización de Tareas Administrativas con Bash](tema6/lab-6.1-automatizacion-de-tareas-administrativas-con-bash.md)
 
 - [Laboratorio 6.2: Backups Automáticos, Rotación y Recuperación](tema6/lab-6.2-backups-automaticos-rotacion-y-recuperacion.md)
-
----
-
-### Exámenes
-
-- [1er Parcial - Enunciado](examenes/1er_parcial_enunciado.md)
-
-- [2do Parcial - Enunciado](examenes/2do_parcial_enunciado.md)
-
-- [2do Parcial - Avance de Proyecto Final](examenes/2do_parcial_avance_proyecto_final.md)
-
-- **Examen Final — Banco de Proyectos:** [Ver 22 proyectos integradores](examenes/banco_proyectos_final.md)
-
----
-
-## Proyecto Final
-
-Plantillas listas para ser usadas en GitHub (README) y para las diapositivas de la presentación final; asegurando que cubran todos los aspectos avanzados como HA, tolerancia a fallos, monitoreo y automatización.
-
-- [Plantilla 1: Documentación del Proyecto (README.md para GitHub)](https://github.com/usfxch/sis313-documentacion-proyecto-final)
-
-- [Plantilla 2: Formato de Diapositivas para Presentación Final](proyecto-final/formato-diapositivas.md)

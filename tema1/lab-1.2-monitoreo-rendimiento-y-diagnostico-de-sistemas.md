@@ -6,7 +6,7 @@
 
 **Docente:** Ing. Marcelo Quispe Ortega
 
-**Semestre:** 1/2026
+**Semestre:** 2/2026
 
 ## 🎯 Objetivos del Laboratorio
 
