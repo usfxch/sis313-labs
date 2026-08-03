@@ -24,7 +24,7 @@
 - **Una Máquina Virtual (VM) con:**
     - **Ubuntu Server** en su versión **24.04 LTS** instalado por defecto en un disco virtual.
         - Instalar servidor **OpenSSH**.
-    - Acceso a la línea de comandos o terminal (instalar [Warp desde aquí](https://app.warp.dev/referral/3DY6RJ)). 
+    - Acceso a la línea de comandos o terminal (instalar [Warp desde aquí](https://app.warp.dev/referral/NQ384D)). 
     - Adaptador de red conectado como **Adaptador puente**.
     - Al menos **dos discos virtuales** para **RAID 1**.
     - Al menos **tres discos virtuales** para **RAID 5**.

@@ -128,7 +128,7 @@ Como tu servidor está dentro de una red interna de VirtualBox (NAT), tu computa
 
     Para administrar servidores, los profesionales no suelen usar la ventana pequeña de VirtualBox, sino una terminal moderna.
 
-    1. **Instala Warp:** Descarga e instala [Warp Terminal](https://app.warp.dev/referral/3DY6RJ). Es una terminal inteligente que te ayudará mucho en este semestre.
+    1. **Instala Warp:** Descarga e instala [Warp Terminal](https://app.warp.dev/referral/NQ384D). Es una terminal inteligente que te ayudará mucho en este semestre.
 
     2. **Prueba la conexión:** Abre Warp en tu PC física y escribe el siguiente comando (reemplaza `marcelo` por el nombre de usuario que elegiste durante la instalación):
 
